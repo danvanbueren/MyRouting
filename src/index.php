@@ -40,6 +40,20 @@
     </div>
 </div>
 
+<div class="position-absolute bottom-0 start-0 p-3">
+    <div class="card" style="width: 18.75rem">
+        <div class="card-header d-flex justify-content-between">
+            <h6 class="card-subtitle pt-1 text-body-secondary align-self-center">WEBLOG</h6>
+            <button type="button" class="btn btn-secondary btn-sm float-end align-self-center" id="weblog-hide">Hide</button>
+        </div>
+
+        <div class="card-body overflow-y-scroll" style="height: 6rem;" id="weblog-body">
+            <p class="font-monospace p-0" id="weblog-content">
+            </p>
+        </div>
+    </div>
+</div>
+
 <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
 
 <?php
@@ -60,4 +74,5 @@ foreach ($iterator as $file) {
 <script src="js/myrouting/init.js"></script>
 
 </body>
+
 </html>

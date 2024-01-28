@@ -1,2 +1,5 @@
 document.getElementById("root-container").innerHTML = 'inner html updated.';
-console.log('good morning');
+
+let log = new WebLog();
+
+log.primary('test');
