@@ -32,13 +32,32 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="row py-1">
-        <div class="col">Column</div>
+<div class="container py-1" id="root-container">
+    <div class="d-flex flex-column py-4">
+        <span class="align-self-center material-symbols-outlined fs-1 py-2 text-warning">warning</span>
+        <h1 class="align-self-center text-warning">Unable To Load!</h1>
+        <h6 class="align-self-center py-2">Please enable JavaScript in your browser's settings to use this application.</h6>
     </div>
 </div>
 
 <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+
+<?php
+// Easy way to add all <script> tags for the project's JS ...NOT FOR PRODUCTION BUILD
+
+$dirIterator = new RecursiveDirectoryIterator("js/myrouting/autoload");
+$iterator = new RecursiveIteratorIterator($dirIterator, RecursiveIteratorIterator::SELF_FIRST);
+
+foreach ($iterator as $file) {
+    if($file->getExtension() == 'js') {
+        $url = $file->getPathname();
+        echo '<script src="' . $url . '"></script>';
+    }
+}
+
+?>
+
+<script src="js/myrouting/init.js"></script>
 
 </body>
 </html>
