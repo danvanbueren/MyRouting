@@ -1,9 +1,7 @@
-let weblogContent = document.getElementById('weblog-content');
-let weblogHideBtn = document.getElementById('weblog-hide');
-let weblogBody = document.getElementById('weblog-body');
-
 class WebLog {
     constructor() {
+        this.init();
+
         this.messages = [];
         this.hidden = false;
         this.toggleHidden();
@@ -37,6 +35,8 @@ class WebLog {
     }
 
     updateConsole() {
+        let weblogContent = document.getElementById('weblog-content');
+
         let output = '';
         this.messages.forEach((item, index, arr) => {
             output += this.messages[index];
@@ -49,6 +49,9 @@ class WebLog {
     }
 
     toggleHidden() {
+        let weblogBody = document.getElementById('weblog-body');
+        let weblogHideBtn = document.getElementById('weblog-hide');
+
         this.hidden = !this.hidden;
         weblogBody.hidden = this.hidden;
 
@@ -58,8 +61,21 @@ class WebLog {
             weblogHideBtn.innerText = 'Hide';
         }
     }
-}
 
-weblogHideBtn.addEventListener("click", () => {
-    log.toggleHidden();
-});
+    init() {
+        let weblogParent = document.getElementById('weblog');
+        weblogParent.innerHTML = '' +
+            '<div class="position-absolute bottom-0 start-0 p-3">' +
+            '<div class="card" style="width: 18.75rem">' +
+            '<div class="card-header d-flex justify-content-between">' +
+            '<h6 class="card-subtitle pt-1 text-body-secondary align-self-center">WEBLOG</h6>' +
+            '<button type="button" class="btn btn-secondary btn-sm float-end align-self-center" id="weblog-hide" onclick="log.toggleHidden();">Hide</button>' +
+            '</div>' +
+            '<div class="card-body overflow-y-scroll" style="height: 6rem;" id="weblog-body">' +
+            '<p class="font-monospace p-0" id="weblog-content">' +
+            '</p>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    }
+}
