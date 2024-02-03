@@ -15,7 +15,7 @@
 
 For myEval and others, "Add to myRouting" for command - (can add demo in myRouting but needs to be clear that it's an example)
 
-
+Ideas from trosper
 - document visibility!! to member and supervisors and fight ldrshp
 - document revision history with an audit log
 - for higher reviewing levels, allow CSS to "lock" document to prevent editing at lower levels
