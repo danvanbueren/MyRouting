@@ -15,10 +15,10 @@
         <div class="w-100 d-flex align-items-center" style="height: 3.5rem;">
             <div class="d-flex justify-content-between collapse navbar-collapse" id="navbar-collapse-1">
                 <div>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="index.php">
                         <img src="img/USAF_LOGO.svg" alt="Logo" height="43rem" class="d-inline-block align-text-top">
                     </a>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="index.php">
                         <img src="img/USSF_LOGO.png" alt="Logo" height="43rem" class="d-inline-block align-text-top">
                     </a>
                 </div>
@@ -77,141 +77,32 @@
         </div>
 
         <div class="w-100 pt-3">
-            <div class="d-flex justify-content-between align-items-end">
-                <h3 class="pb-2">Pending Action<span class="material-symbols-outlined ps-2 align-text-center">help</span></h3>
-                <div class="pb-3">
-                    <label for="example-input-7"></label><input type="text" class="form-control rounded-0" id="example-input-7" placeholder="Search">
-                </div>
-            </div>
-            <div class="border p-3 row">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col" style="width: 25%">Recipient</th>
-                        <th scope="col" style="width: 25%">Type</th>
-                        <th scope="col" style="width: 25%">Status</th>
-                        <th scope="col" style="width: 25%">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>SSgt Alfred Sills</td>
-                        <td>Other</td>
-                        <td>Awaiting Review by CSS</td>
-                        <td>
-                            <button type="button" class="btn btn-secondary rounded-0">View</button>
-                            <button type="button" class="btn btn-secondary rounded-0">Reassign</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Capt Dillon McDonald</td>
-                        <td>Command Sponsorship</td>
-                        <td>Awaiting Concurrence by CSS</td>
-                        <td>
-                            <button type="button" class="btn btn-secondary rounded-0">View</button>
-                            <button type="button" class="btn btn-secondary rounded-0">Reassign</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>MSgt Jabril Thompson</td>
-                        <td>DEROS Extension</td>
-                        <td>Awaiting Review by Rater</td>
-                        <td>
-                            <button type="button" class="btn btn-secondary rounded-0">View</button>
-                            <button type="button" class="btn btn-secondary rounded-0">Reassign</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <h3 class="pb-2">Pending Action<span class="material-symbols-outlined ps-2 align-text-center">help</span></h3>
+            <div class="border p-3 row" id="element_table_pending">
+                <span>Loading...</span>
             </div>
         </div>
 
         <div class="w-100 pt-3">
             <h3 class="pb-2">Submitted to AFPC<span class="material-symbols-outlined ps-2 align-text-center">help</span></h3>
-            <div class="border p-3 row">
-                <div class="col-auto p-0 m-0">
-                    <span class="material-symbols-outlined" style="font-size: 2.5rem;">info</span>
-                </div>
-                <div class="col">
-                    <h6>No Items Pending</h6>
-                    <span>There are currently no pending items.</span>
-                </div>
+            <div class="border p-3 row" id="element_table_afpc">
+                <span>Loading...</span>
             </div>
         </div>
 
         <div class="w-100 pt-3">
-            <div class="d-flex justify-content-between align-items-end">
-                <h3 class="pb-2">Awaiting Signature<span class="material-symbols-outlined ps-2 align-text-center">help</span></h3>
-                <div class="pb-3">
-                    <label for="example-input-8"></label><input type="text" class="form-control rounded-0" id="example-input-8" placeholder="Search">
-                </div>
-            </div>
-            <div class="border p-3 row">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col" style="width: 25%">Recipient</th>
-                        <th scope="col" style="width: 25%">Type</th>
-                        <th scope="col" style="width: 25%">Status</th>
-                        <th scope="col" style="width: 25%">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1Lt Alissa Bellows</td>
-                        <td>Training Report</td>
-                        <td>Awaiting Approval by Commander</td>
-                        <td>
-                            <button type="button" class="btn btn-secondary rounded-0">View</button>
-                            <button type="button" class="btn btn-secondary rounded-0">Reassign</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <h3 class="pb-2">Awaiting Signature<span class="material-symbols-outlined ps-2 align-text-center">help</span></h3>
+            <div class="border p-3 row" id="element_table_signature">
+                <span>Loading...</span>
             </div>
         </div>
 
         <div class="w-100 pt-3">
-            <div class="d-flex justify-content-between align-items-end">
-                <h3 class="pb-2">Recently Completed<span class="material-symbols-outlined ps-2 align-text-center">help</span></h3>
-                <div class="pb-3">
-                    <label for="example-input-9"></label><input type="text" class="form-control rounded-0" id="example-input-9" placeholder="Search">
-                </div>
-            </div>
-            <div class="border p-3 row">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col" style="width: 25%">Recipient</th>
-                        <th scope="col" style="width: 25%">Type</th>
-                        <th scope="col" style="width: 25%">Status</th>
-                        <th scope="col" style="width: 25%">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>TSgt Tyler Ericsson</td>
-                        <td>DEROS Extension</td>
-                        <td>Approved by Commander</td>
-                        <td>
-                            <button type="button" class="btn btn-secondary rounded-0">View</button>
-                            <button type="button" class="btn btn-secondary rounded-0">Reassign</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>SMSgt Phillip Christiansen</td>
-                        <td>Award Nomination</td>
-                        <td>Approved by AFPC</td>
-                        <td>
-                            <button type="button" class="btn btn-secondary rounded-0">View</button>
-                            <button type="button" class="btn btn-secondary rounded-0">Reassign</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <h3 class="pb-2">Recently Completed<span class="material-symbols-outlined ps-2 align-text-center">help</span></h3>
+            <div class="border p-3 row" id="element_table_completed">
+                <span>Loading...</span>
             </div>
         </div>
-    </div>
 
     <div class="w-100 pt-3 border-bottom" style="height: 4rem;"></div>
 
@@ -469,6 +360,20 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <?php
+    $di = new RecursiveDirectoryIterator('js');
+
+    foreach (new RecursiveIteratorIterator($di) as $filename => $file) {
+        if(!is_dir($filename)) {
+            if(!str_contains($filename, '.DS_Store')) {
+                echo '<script src="' . $filename . '"></script>' . PHP_EOL;
+            }
+        }
+    }
+
+    echo '<script>let app = new MyRouting();app.setSuperuser();</script>';
+    ?>
 
 </body>
 </html>

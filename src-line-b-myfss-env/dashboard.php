@@ -15,10 +15,10 @@
         <div class="w-100 d-flex align-items-center" style="height: 3.5rem;">
             <div class="d-flex justify-content-between collapse navbar-collapse" id="navbar-collapse-1">
                 <div>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="index.php">
                         <img src="img/USAF_LOGO.svg" alt="Logo" height="43rem" class="d-inline-block align-text-top">
                     </a>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="index.php">
                         <img src="img/USSF_LOGO.png" alt="Logo" height="43rem" class="d-inline-block align-text-top">
                     </a>
                 </div>

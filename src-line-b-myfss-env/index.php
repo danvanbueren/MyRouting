@@ -16,10 +16,10 @@
         <div class="w-100 d-flex align-items-center" style="height: 3.5rem;">
             <div class="d-flex justify-content-between collapse navbar-collapse" id="navbar-collapse-1">
                 <div>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="index.php">
                         <img src="img/USAF_LOGO.svg" alt="Logo" height="43rem" class="d-inline-block align-text-top">
                     </a>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="index.php">
                         <img src="img/USSF_LOGO.png" alt="Logo" height="43rem" class="d-inline-block align-text-top">
                     </a>
                 </div>
@@ -121,7 +121,7 @@
                 </div>
 
                 <div class="col-2 image-container btn p-3">
-                    <a href="dashboard.html">
+                    <a href="dashboard.php">
                         <img src="img/app_icon.jpg" style="opacity: 50%; width: 100%; height: 13rem" class="border" alt="">
                         <div class="centered">
                             <h5 class="mb-0 text-white shadow">myROUTING</h5>
@@ -131,7 +131,7 @@
                 </div>
 
                 <div class="col-2 image-container btn p-3">
-                    <a href="admin.html">
+                    <a href="admin.php">
                         <img src="img/app_icon.jpg" style="opacity: 50%; width: 100%; height: 13rem" class="border" alt="">
                         <div class="centered">
                             <h5 class="mb-0 text-white shadow">myROUTING Admin</h5>
