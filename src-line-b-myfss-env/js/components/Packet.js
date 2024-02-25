@@ -2,21 +2,34 @@ class Packet {
     constructor(app, packetUid, packetName, packetType, packetOwner_userUid, packetComments) {
         this.app = app;
 
-        this.packetUid = packetUid;
-        this.packetName = packetName;
-        this.packetType = packetType;
-        this.packetComments = packetComments;
+        this.uid = packetUid;
+        this.name = packetName;
+        this.type = packetType;
+        this.comments = packetComments;
 
         this.packetOwner = this.getUser(packetOwner_userUid);
-        //this.packetPhases = new Phases(this.packetUid);
+        this.phases = new Phases(this);
     }
 
     getPacketType() {
-        return this.packetType;
+        return this.type;
     }
 
     getPacketStatus() {
-        return 'Status';
+        this.phases.storage.sort((a, b) => {
+            return a.stepNumber - b.stepNumber;
+        });
+
+        // TODO: figure out why this isn't working
+        this.phases.storage.forEach((phase) => {
+            if(phase.dateCompleted === '') {
+                // Phase is incomplete
+                return 'Awaiting ' + phase.type + 'by [lookup]' + phase.fkeyUserUidStakeholder;
+            } else {
+                // Phase is complete
+                return 'lol';
+            }
+        });
     }
 
     getUser(id) {

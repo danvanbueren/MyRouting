@@ -72,7 +72,7 @@ class Packets {
                     '<td>' + packet.getPacketType() + '</td>' +
                     '<td>' + packet.getPacketStatus() + '</td>' +
                     '<td>' +
-                    '<button type="button" class="btn btn-secondary rounded-0">View</button>' +
+                    '<button type="button" class="btn btn-secondary rounded-0 me-2">View</button>' +
                     '<button type="button" class="btn btn-secondary rounded-0">Reassign</button>' +
                     '</td>' +
                     '</tr>';

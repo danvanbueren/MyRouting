@@ -36,7 +36,7 @@ switch($switch) {
         if (empty($id)) {
             $sql = "SELECT * FROM phases";
         } else {
-            $sql = "SELECT * FROM phases WHERE UID = " . $id;
+            $sql = "SELECT * FROM phases WHERE FK_packets_UID = " . $id;
         }
         break;
     case "packets":
@@ -62,6 +62,8 @@ if (mysqli_num_rows($result) > 0) {
         array_push($output, $row);
     }
     echo json_encode($output);
+} else {
+    echo json_encode(null);
 }
 
 mysqli_close($conn);

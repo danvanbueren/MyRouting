@@ -1,12 +1,16 @@
 class Phase {
-    constructor(app, packetUid) {
-        this.app = app;
+    constructor(packetObject, phaseUid, phaseType, phaseSuspense, phaseComments, phaseDateCompleted, phaseStepNumber, fkeyUserUidStakeholder) {
+        this.parentPacket = packetObject;
+        this.app = packetObject.app;
 
-        this.phaseUid = '';
-        this.parentPacketUid = packetUid;
-        this.phaseType = '';
-        this.phaseSuspense = '';
-        this.phaseComments = '';
-        this.files = new Files(this.phaseUid);
+        this.uid = phaseUid;
+        this.type = phaseType;
+        this.suspense = phaseSuspense;
+        this.comments = phaseComments;
+        this.dateCompleted = phaseDateCompleted;
+        this.stepNumber = phaseStepNumber;
+        this.fkeyUserUidStakeholder = fkeyUserUidStakeholder;
+
+        this.files = new Files(this.uid);
     }
 }
