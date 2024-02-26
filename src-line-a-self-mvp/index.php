@@ -6,9 +6,9 @@
 
     <title>MyRouting</title>
 
-    <link href="css/halfmoon/halfmoon.min.css" rel="stylesheet">
-    <link href="css/halfmoon/cores/halfmoon.cores.css" rel="stylesheet">
-    <link href="css/google/materialSymbols.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/halfmoon@2.0.1/css/halfmoon.min.css" rel="stylesheet" integrity="sha256-SsJizWSIG9JT9Qxbiy8xnYJfjCAkhEQ0hihxRn7jt2M=" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/halfmoon@2.0.1/css/cores/halfmoon.cores.css" rel="stylesheet" integrity="sha256-MAzAVJMU/ze52ZHcA8CeqRrCOVndMZlHwNeS2c73vP4=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
 
@@ -42,7 +42,7 @@
 
 <div id="weblog" ></div>
 
-<script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 <?php
 // Easy way to add all <script> tags for the project's JS ...NOT FOR PRODUCTION BUILD
