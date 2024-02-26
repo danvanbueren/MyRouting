@@ -2,26 +2,9 @@ class Packets {
     constructor(app) {
         this.app = app;
 
-        this.storage = [];
-        this.getPackets();
+        this.storage = this.app.util.getPackets();
 
         this.updateView();
-    }
-
-    addPacket(newPacket) {
-        this.storage.push(newPacket);
-    }
-
-    // Use this to reset the whole array with fresh data
-    getPackets() {
-        this.storage = [];
-
-        let response = this.app.api.getPackets();
-
-        response.forEach((e) => {
-            let p = new Packet(this.app, e['UID'], e['name'], e['type'], e['FK_users_UID'], e['comments']);
-            this.storage.push(p);
-        });
     }
 
     updateView() {

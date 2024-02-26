@@ -2,6 +2,7 @@ class MyRouting {
     constructor() {
         this.userId = '';
         this.isSuperuser = false;
+        this.util = new Utilities(this);
         this.api = new ClientApiDriver(this);
         this.packets = new Packets(this);
     }

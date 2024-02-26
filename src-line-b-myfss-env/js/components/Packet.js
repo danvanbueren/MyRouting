@@ -7,7 +7,7 @@ class Packet {
         this.type = packetType;
         this.comments = packetComments;
 
-        this.packetOwner = this.getUser(packetOwner_userUid);
+        this.packetOwner = this.app.util.getUser(packetOwner_userUid);
         this.phases = new Phases(this);
     }
 
@@ -20,27 +20,14 @@ class Packet {
             return a.stepNumber - b.stepNumber;
         });
 
-        // TODO: figure out why this isn't working
-        this.phases.storage.forEach((phase) => {
-            if(phase.dateCompleted === '') {
-                // Phase is incomplete
-                return 'Awaiting ' + phase.type + 'by [lookup]' + phase.fkeyUserUidStakeholder;
-            } else {
-                // Phase is complete
-                return 'lol';
+        for(let element of this.phases.storage) {
+            if(element.dateCompleted === '') {
+                // Phase is incomplete - pull it
+                let user = this.app.util.getUser(element.fkeyUserUidStakeholder);
+                return 'Awaiting ' + element.type.toLowerCase() + ' by ' + user.getShortFormalName();
             }
-        });
-    }
+        }
 
-    getUser(id) {
-        let userData = this.app.api.getUserById(id);
-
-        let uid = userData[0]['UID'];
-        let first = userData[0]['firstName'];
-        let last = userData[0]['lastName'];
-        let grade = userData[0]['grade'];
-        let org = userData[0]['organization'];
-
-        return new User(this.app, uid, first, last, grade, org);
+        return 'Packet not yet initialized';
     }
 }
