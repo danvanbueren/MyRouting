@@ -3,6 +3,12 @@ class Utilities {
         this.app = app;
     }
 
+    // Returns a Packet object associated with the database UID
+    getPacket(packetUid) {
+        let r = this.app.api.getPacketById(packetUid);
+        return new Packet(this.app, r[0]['UID'], r[0]['name'], r[0]['type'], r[0]['FK_users_UID'], r[0]['comments']);
+    }
+
     // Returns array of every Packet object in the database
     getPackets() {
         let storage = [];

@@ -3,11 +3,9 @@ class Packets {
         this.app = app;
 
         this.storage = this.app.util.getPackets();
-
-        this.updateView();
     }
 
-    updateView() {
+    updateAdminView() {
         let html = this.getTableView(null);
 
         let pendingActionTable = document.getElementById('element_table_pending');
@@ -55,8 +53,8 @@ class Packets {
                     '<td>' + packet.getPacketType() + '</td>' +
                     '<td>' + packet.getPacketStatus() + '</td>' +
                     '<td>' +
-                    '<button type="button" class="btn btn-secondary rounded-0 me-2">View</button>' +
-                    '<button type="button" class="btn btn-secondary rounded-0">Reassign</button>' +
+                    '<button type="button" class="btn btn-secondary rounded-0 me-2" data-bs-toggle="modal" data-bs-target="#view-packet-modal" onclick="app.views.updateViewPacketModal(' + packet.uid + ');">View</button>' +
+                    '<button type="button" class="btn btn-secondary rounded-0" disabled>Reassign</button>' +
                     '</td>' +
                     '</tr>';
             });

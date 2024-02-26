@@ -5,6 +5,9 @@ class MyRouting {
         this.util = new Utilities(this);
         this.api = new ClientApiDriver(this);
         this.packets = new Packets(this);
+        this.views = new Views(this);
+
+        this.packets.updateAdminView();
     }
 
     setUserIdForSession(userId) {
