@@ -65,7 +65,7 @@
             <div class="d-flex justify-content-between align-items-end">
                 <h3 class="pb-2">myRouting Admin Dashboard</h3>
                 <div class="align-text-bottom">
-                    <button type="button" class="btn btn-secondary rounded-0 me-2 mb-2" data-bs-toggle="modal" data-bs-target="#add-routing-modal"><span class="material-symbols-outlined align-text-bottom fs-5 pe-1">add</span><span class="align-text-center">Add Routing</span></button>
+                    <button type="button" class="btn btn-secondary rounded-0 me-2 mb-2" data-bs-toggle="modal" data-bs-target="#add-routing-modal" onclick="app.views.updateViewAddPacketModal();"><span class="material-symbols-outlined align-text-bottom fs-5 pe-1">add</span><span class="align-text-center">Add Packet</span></button>
                     <button type="button" class="btn btn-secondary rounded-0 mb-2"><span class="material-symbols-outlined align-text-bottom fs-5 pe-1">output_circle</span><span class="align-text-center">Admin Report</span></button>
                 </div>
             </div>
@@ -113,41 +113,40 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modal-title-6">Add Routing</h1>
+                    <h1 class="modal-title fs-5" id="modal-title-6">Add Packet</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
-
                     <form>
-
                         <h5>Search Members</h5>
-                        <p>Use one or more fields to search for the subject of this routing.</p>
+                        <p>Use one or more fields to search for the subject of this packet.</p>
 
                         <div class="input-group my-3">
                             <div class="form-floating">
-                                <select class="form-select" id="select-rank" aria-label="Select example">
-                                    <option value="E1">AB</option>
-                                    <option value="E2">Amn</option>
-                                    <option value="E3">A1C</option>
-                                    <option value="E4">SrA</option>
-                                    <option value="E5">SSgt</option>
-                                    <option value="E6">TSgt</option>
-                                    <option value="E7">MSgt</option>
-                                    <option value="E8">SMSgt</option>
-                                    <option value="E9">CMSgt</option>
+                                <select class="form-select" id="add-packet-modal-select-rank" aria-label="Select rank" disabled>
+                                    <option value="E-1">AB</option>
+                                    <option value="E-2">Amn</option>
+                                    <option value="E-3">A1C</option>
+                                    <option value="E-4">SrA</option>
+                                    <option value="E-5">SSgt</option>
+                                    <option value="E-6">TSgt</option>
+                                    <option value="E-7">MSgt</option>
+                                    <option value="E-8">SMSgt</option>
+                                    <option value="E-9">CMSgt</option>
                                     <option disabled></option>
-                                    <option value="O1">2Lt</option>
-                                    <option value="O2">1Lt</option>
-                                    <option value="O3">Capt</option>
-                                    <option value="O4" selected>Maj</option>
-                                    <option value="O5">Lt Col</option>
-                                    <option value="O6">Col</option>
-                                    <option value="O7">Brig Gen</option>
-                                    <option value="O8">Maj Gen</option>
-                                    <option value="O9">Lt Gen</option>
-                                    <option value="O10">Gen</option>
+                                    <option value="O-1">2Lt</option>
+                                    <option value="O-2">1Lt</option>
+                                    <option value="O-3">Capt</option>
+                                    <option value="O-4">Maj</option>
+                                    <option value="O-5">Lt Col</option>
+                                    <option value="O-6">Col</option>
+                                    <option value="O-7">Brig Gen</option>
+                                    <option value="O-8">Maj Gen</option>
+                                    <option value="O-9">Lt Gen</option>
+                                    <option value="O-10">Gen</option>
                                     <option disabled></option>
+                                    <option selected value="ALL">All</option>
                                     <option value="CIV">Civ</option>
                                     <option value="OTH">Other</option>
                                 </select>
@@ -157,72 +156,30 @@
                             <span class="input-group-text"></span>
 
                             <div class="form-floating">
-                                <input type="text" class="form-control" placeholder="First Name" id="first-name" aria-label="First Name" aria-describedby="add-on-1">
+                                <input type="text" class="form-control" placeholder="First Name" id="add-packet-modal-first-name" aria-label="First Name" aria-describedby="add-on-1" disabled>
                                 <label for="first-name">First Name</label>
                             </div>
 
                             <span class="input-group-text"></span>
 
                             <div class="form-floating">
-                                <input type="text" class="form-control" placeholder="Last Name" id="last-name" aria-label="Last Name" aria-describedby="add-on-1">
+                                <input type="text" class="form-control" placeholder="Last Name" id="add-packet-modal-last-name" aria-label="Last Name" aria-describedby="add-on-1" disabled>
                                 <label for="last-name">Last Name</label>
                             </div>
 
                             <span class="input-group-text"></span>
 
                             <div class="form-floating">
-                                <input type="text" class="form-control" placeholder="Email" id="email" aria-label="Email" aria-describedby="add-on-1">
+                                <input type="text" class="form-control" placeholder="Email" id="add-packet-modal-email" aria-label="Email" aria-describedby="add-on-1" disabled>
                                 <label for="email">Email</label>
                             </div>
                         </div>
 
                         <div class="border-bottom my-3"></div>
 
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">Select</th>
-                                <th scope="col">Rank</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Organization</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">
-                                    <div class="form-check">
-                                        <label for="rr1"></label>
-                                        <input class="form-check-input" type="radio" value="backend" name="gg1" id="rr1">
-                                    </div>
-                                </th>
-                                <td>Maj</td>
-                                <td>Brian Taylor</td>
-                                <td>0001 NATO AWACS OPS SQ</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    <div class="form-check">
-                                        <label for="rr2"></label>
-                                        <input class="form-check-input" type="radio" value="backend" name="gg1" id="rr2">
-                                    </div>
-                                </th>
-                                <td>Maj</td>
-                                <td>Melissa Rogers</td>
-                                <td>0001 NATO AWACS OPS SQ</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    <div class="form-check">
-                                        <label for="rr3"></label>
-                                        <input class="form-check-input" type="radio" value="backend" name="gg1" id="rr3">
-                                    </div>
-                                </th>
-                                <td>Maj</td>
-                                <td>Oscar Hernandez</td>
-                                <td>0001 NATO AWACS OPS SQ</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div id="add-packet-modal-member-table"></div>
+
+
                     </form>
 
                     <button type="button" class="btn btn-primary ms-auto float-end" data-bs-toggle="modal" data-bs-target="#add-routing-page2-modal">Next</button>
@@ -240,7 +197,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modal-title-7">Add Routing</h1>
+                    <h1 class="modal-title fs-5" id="modal-title-7">Add Packet</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 

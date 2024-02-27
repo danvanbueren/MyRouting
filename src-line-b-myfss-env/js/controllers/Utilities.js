@@ -53,4 +53,17 @@ class Utilities {
 
         return new User(this.app, uid, first, last, grade, org);
     }
+
+    getUsers() {
+        let response = this.app.api.getUsers();
+        let storage = [];
+        if(response !== null) {
+            response.forEach((e) => {
+                let user = new User(this.app, e['UID'], e['firstName'], e['lastName'], e['grade'], e['FK_organizations_UID']);
+                storage.push(user);
+            });
+        }
+
+        return storage;
+    }
 }

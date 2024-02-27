@@ -1,13 +1,13 @@
 class User {
     // create a user from the associated packet
-    constructor(app, uid, firstName, lastName, grade, organization) {
+    constructor(app, UID, firstName, lastName, grade, FK_organizations_UID) {
         this.app = app;
 
-        this.uid = uid;
+        this.uid = UID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.grade = grade;
-        this.organization = organization;
+        this.organization = FK_organizations_UID;
     }
 
     getShortRank() {

@@ -12,7 +12,6 @@ class Views {
 
         for (let phase of packet.phases.storage) {
             let phaseHtml = '';
-            console.log(phase);
             phaseHtml += '' +
                 '<div class="card m-2"><div class="card-body">' +
                 '<p class="card-text">Phase stepNumber: ' + phase.stepNumber + '</p>' +
@@ -28,7 +27,7 @@ class Views {
         }
 
         if (allPhasesHtml === '')
-            allPhasesHtml = '<p>This packet doesn\'t have any phases yet. Add one to get started!</p>';
+            allPhasesHtml = '<span class="badge text-bg-light fst-italic">This packet doesn\'t have any phases yet. Add one to get started!</span>';
 
         modalContentElement.innerHTML = '' +
             '<div class="modal-header">' +
@@ -45,4 +44,40 @@ class Views {
             '<button type="button" class="btn btn-primary" disabled>Save</button>' +
             '</div>';
     }
+
+    updateViewAddPacketModal() {
+        let membersHtml = '';
+
+        let users = this.app.util.getUsers();
+
+        users.sort((a, b) => {
+            return a.lastName.localeCompare(b.lastName);
+        });
+
+        users.forEach((e, i) => {
+            membersHtml += '' +
+                '<tr><th scope="row"><div class="form-check"><label for="rr1"></label>' +
+                '<input class="form-check-input" type="radio" value="' + e.uid + '" name="gg1" id="rr1">' +
+                '</div></th>' +
+                '<td>' + e.getMediumRank() + '</td>' +
+                '<td>' + e.lastName + ', ' + e.firstName + '</td>' +
+                '<td>' + e.organization + '</td></tr>';
+        });
+
+        document.getElementById('add-packet-modal-member-table').innerHTML = '' +
+            '<table class="table table-striped">' +
+            '<thead><tr><th scope="col">Select</th><th scope="col">Rank</th><th scope="col">Name</th><th scope="col">Organization</th></tr></thead>' +
+            '<tbody>' +
+            membersHtml +
+            '</tbody>' +
+            '</table>';
+    }
+
 }
+
+
+
+
+
+
+
