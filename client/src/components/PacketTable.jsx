@@ -1,62 +1,81 @@
 import React from 'react';
+import { Table, Button, Alert, Container, Row, Col } from 'react-bootstrap';
+import { useState, useEffect } from "react";
+import PacketDisplayModal from "../components/PacketDisplayModal";
 
 function PacketTable({ packets }) {
+  const [selectedPacket,setSelectedPacket]=useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   if (packets.length < 1) {
     return (
-        <>
-      <div className="col-auto p-0 m-0">
-        <span className="material-symbols-outlined" style={{ fontSize: '2.5rem' }}>
-          info
-        </span>
-      </div>
-      <div className="col">
-        <h6>No Items Pending</h6>
-        <span>There are currently no pending items.</span>
-      </div>
-      </>
+      <Container>
+        <Row className="align-items-center">
+          <Col xs="auto" className="p-0 m-0">
+            <span className="material-symbols-outlined" style={{ fontSize: '2.5rem' }}>
+              info
+            </span>
+          </Col>
+          <Col>
+            <h6>No Items Pending</h6>
+            <span>There are currently no pending items.</span>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 
   return (
-    <table className="table table-striped">
+    <>
+    <Table striped bordered hover>
       <thead>
         <tr>
-          <th scope="col" style={{ width: '25%' }}>
-            Recipient
-          </th>
-          <th scope="col" style={{ width: '25%' }}>
-            Type
-          </th>
-          <th scope="col" style={{ width: '25%' }}>
-            Status
-          </th>
-          <th scope="col" style={{ width: '25%' }}>
-            Actions
-          </th>
+          <th>Recipient</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {packets.map((packet) => (
           <tr key={packet.packetId}>
-            <td>{packet.assignee}</td>
-           
-           <td>{packet.type}</td>
+            <td>{packet.creatorUser.rank} {packet.creatorUser.firstName} {packet.creatorUser.lastName} </td>
+            <td>{packet.type}</td>
             <td>
-              <button
-                type="button"
-                className="btn btn-secondary rounded-0 me-2"
-             
-              >
+             <p>
+                Awaiting {packet.phases[packet.currentPhase].phase.toLowerCase()} by   {packet.phases[packet.currentPhase].assigneeUser.rank} {packet.phases[packet.currentPhase].assigneeUser.firstName} {packet.phases[packet.currentPhase].assigneeUser.lastName}
+             </p>
+          
+
+            </td>
+            <td>
+              <Button variant="secondary" className="me-2" size="sm"     onClick={() => {
+                                  setSelectedPacket(packet);
+                                  setIsModalOpen(true);
+                                }}>
                 View
-              </button>
-              <button type="button" className="btn btn-secondary rounded-0" disabled>
+              </Button>
+              <Button variant="secondary" size="sm" disabled>
                 Reassign
-              </button>
+              </Button>
             </td>
           </tr>
+
+
         ))}
       </tbody>
-    </table>
+    </Table>
+ 
+    <PacketDisplayModal
+isOpen={isModalOpen}
+closeModal={() => {
+setIsModalOpen(false);
+setSelectedPacket(null);
+}}
+packet={selectedPacket}
+/>   
+  </>
+          
   );
 }
 
