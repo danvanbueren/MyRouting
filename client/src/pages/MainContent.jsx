@@ -6,7 +6,7 @@ import AppIcon from "../assets/img/app_icon.jpg";
 import OtherAppIcon from "../assets/img/other_app_icon.jpg";
 import "../css/landing.css";
 
-const API_URL = `http://localhost:3000/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`;
+
 
 const appSections = [
   {
@@ -122,7 +122,11 @@ const appSections = [
 
 const fetchUser = async (setUser) => {
   try {
-    const response = await axios.get(API_URL);
+
+    const response = await axios.get(   `${
+      import.meta.env.VITE_API
+    }/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`
+  );
     setUser(response.data);
   } catch (error) {
     console.error("Get user failed:", error);

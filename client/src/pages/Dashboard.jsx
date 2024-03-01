@@ -48,7 +48,6 @@ function Dashboard() {
 
   const handleSelectPacket = async (packet) => {
     setSelectedPacket(packet);
-    console.log(packet);
     setIsPacketModalOpen(true);
   };
 
