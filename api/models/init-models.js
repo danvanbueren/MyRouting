@@ -18,7 +18,7 @@ export default function initModels(sequelize) {
   const packetPhase = _packetPhase.init(sequelize, DataTypes);
   const phase = _phase.init(sequelize, DataTypes);
   const user = _user.init(sequelize, DataTypes);
-
+/*
   user.belongsTo(organization, { as: "organization", foreignKey: "organizationId"});
   organization.hasMany(user, { as: "users", foreignKey: "organizationId"});
   file.belongsTo(packet, { as: "packet", foreignKey: "packetId"});
@@ -26,6 +26,21 @@ export default function initModels(sequelize) {
   packet.hasMany(packetPhase, { as: "phases", foreignKey: "packetId"});
   user.belongsTo(user, { as: "rater", foreignKey: "raterId"});
   user.hasMany(user, { as: "users", foreignKey: "raterId"});
+*/
+
+user.belongsTo(organization, { as: "organization", foreignKey: "organizationId"});
+organization.hasMany(user, { as: "users", foreignKey: "organizationId"});
+file.belongsTo(packet, { as: "packet", foreignKey: "packetId"});
+packet.hasMany(file, { as: "files", foreignKey: "packetId"});
+packet.hasMany(packetPhase, { as: "phases", foreignKey: "packetId"});
+user.belongsTo(user, { as: "rater", foreignKey: "raterId"});
+user.hasMany(user, { as: "users", foreignKey: "raterId"});
+packet.belongsTo(user, { as: "creatorUser", foreignKey: "creator"});
+user.hasMany(packet, { as: "createdPackets", foreignKey: "creator" });
+packetPhase.belongsTo(user, { as: "assigneeUser", foreignKey: "assignee"});
+user.hasMany(packetPhase, { as: "assigneePackets", foreignKey: "assignee" });
+
+
 
   return {
     category,

@@ -4,11 +4,12 @@ const { Model, Sequelize } = _sequelize;
 export default class packetPhase extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    packet_phase_id: {
+    packetPhaseId: {
       type: DataTypes.UUID,
       allowNull: false,
       defaultValue: Sequelize.Sequelize.fn('uuid_generate_v1'),
-      primaryKey: true
+      primaryKey: true,
+      field: "packet_phase_id"
     },
     suspense: {
       type: DataTypes.DATEONLY,
@@ -44,7 +45,11 @@ export default class packetPhase extends Model {
     },
     assignee: {
       type: DataTypes.UUID,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'user',
+        key: 'user_id'
+      }
     }
   }, {
     sequelize,

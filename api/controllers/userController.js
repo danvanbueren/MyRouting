@@ -17,18 +17,22 @@ export const getUsers = async (req, res) => {
           whereClause.grade = grade;
         }
         if (firstName) {
-          whereClause.firstName = { [Op.like]: `%${firstName}%` };
+          whereClause.firstName = { [Op.iLike]: `%${firstName}%` };
         }
         if (lastName) {
-          whereClause.lastName = { [Op.like]: `%${lastName}%` };
+          whereClause.lastName = { [Op.iLike]: `%${lastName}%` };
         }
         if (email) {
-             whereClause.email = { [Op.like]: `%${email}%` };
+             whereClause.email = { [Op.iLike]: `%${email}%` };
        }
         
       
         const users = await models.user.findAll({
           where: whereClause,
+          include: [
+            { model: models.organization, as: "organization" },
+            { model: models.user, as: "rater"}
+          ]
         });
     
         if (!users) {
@@ -49,7 +53,11 @@ export const getUserById = async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    const user = await models.user.findByPk(userId, {});
+    const user = await models.user.findByPk(userId, {include: [
+      { model: models.organization, as: "organization" },
+      { model: models.user, as: "rater"}
+    ]}
+      );
     if (!user) {
         res.status(500).json({ message: "INTERNALE SERVER ERROR" });
       }
