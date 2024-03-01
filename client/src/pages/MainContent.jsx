@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-import CoverCrop from "./assets/img/cover-crop.jpg";
-import AppIcon from "./assets/img/app_icon.jpg";
-import OtherAppIcon from "./assets/img/other_app_icon.jpg";
-import "./css/landing.css";
+import CoverCrop from "../assets/img/cover-crop.jpg";
+import AppIcon from "../assets/img/app_icon.jpg";
+import OtherAppIcon from "../assets/img/other_app_icon.jpg";
+import "../css/landing.css";
 
 const API_URL = `http://localhost:3000/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`;
 

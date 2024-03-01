@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import USAFLogo from "./assets/img/USAF_LOGO.svg";
-import USSFLogo from "./assets/img/USSF_LOGO.png";
-import UserLogo from "./assets/img/USER.svg";
+import USAFLogo from "../assets/img/USAF_LOGO.svg";
+import USSFLogo from "../assets/img/USSF_LOGO.png";
+import UserLogo from "../assets/img/USER.svg";
 import axios from "axios";
-import RoutingModal from "./components/RoutingModal";
+import RoutingModal from "../components/RoutingModal";
+import PacketDisplayModal from "../components/PacketDisplayModal";
 
 function Dashboard() {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
   const [packets, setPackets] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPacketModalOpen, setIsPacketModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  const [selectedPacket, setSelectedPacket] = useState(null);
 
   useEffect(() => {
     document.title = "Demo myRouting";
@@ -45,6 +45,12 @@ function Dashboard() {
     };
     getPackets();
   }, []);
+
+  const handleSelectPacket = async (packet) => {
+    setSelectedPacket(packet);
+    console.log(packet);
+    setIsPacketModalOpen(true);
+  };
 
   return (
     <>
@@ -124,35 +130,39 @@ function Dashboard() {
             <div className="col">
               {packets && packets.length > 0 ? (
                 <>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Rank</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {packets.map((packet, index) => (
-                        <tr key={index}>
-                          <td>{packet.packetId}</td>
-
-                          <td>
-                            <button
-                              variant="primary"
-                              onClick={() => {
-                                setSelectedMember(member);
-                              }}
-                            >
-                              Select
-                            </button>
-                          </td>
+                  <div className="table-responsive">
+                    <table className="table">
+                      <thead>
+                        <tr style={{ textWrap: "nowrap" }}>
+                          <th>Rank</th>
+                          <th>First Name</th>
+                          <th>Last Name</th>
+                          <th>Email</th>
+                          <th>Select Packet</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {packets.map((packet, index) => (
+                          <tr key={index}>
+                            <td>{user.rank}</td>
+                            <td>{user.firstName}</td>
+                            <td>{user.lastName}</td>
+                            <td>{user.email}</td>
+                            <td>
+                              <button
+                                variant="primary"
+                                onClick={() => {
+                                  handleSelectPacket(packet);
+                                }}
+                              >
+                                Select
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </>
               ) : (
                 <>
@@ -196,6 +206,14 @@ function Dashboard() {
       <RoutingModal
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
+      />
+      <PacketDisplayModal
+        isOpen={isPacketModalOpen}
+        closeModal={() => {
+          setIsPacketModalOpen(false);
+          setSelectedPacket(null);
+        }}
+        packet={selectedPacket}
       />
     </>
   );
