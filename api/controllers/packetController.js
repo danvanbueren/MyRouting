@@ -5,6 +5,23 @@ import { Op } from "sequelize";
 
 const models = initModels(sequelize);
 
+export const createPacket = async (req, res) => {
+  try {
+    const { name, description, creator } = req.body;
+
+    const packet = await models.packet.create({
+      name,
+      description,
+      creator
+    });
+
+    res.status(201).json(packet);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+
 export const getPackets = async (req, res) => {
 
     try {
@@ -13,7 +30,8 @@ export const getPackets = async (req, res) => {
     
         const packets = await models.packet.findAll( {     include: [
           { model: models.file, as: "files" },
-          { model: models.packetPhase, as: "phases" }
+          {model: models.user, as: "creatorUser"},
+          { model: models.packetPhase, as: "phases", include: [{ model: models.user, as: "assigneeUser" }] }
         ]
         });
     
@@ -34,14 +52,13 @@ export const getPackets = async (req, res) => {
 export const getPacketById = async (req, res) => {
   try {
     const packetId = req.params.packetId;
-
     const packet = await models.packet.findByPk(packetId, {
       include: [
         { model: models.file, as: "files" },
-        { model: models.packetPhase, as: "phases", include: { model: models.phase, as: "phase" } }
+        { model: models.user, as: "creatorUser" },
+        { model: models.packetPhase, as: "phases", include: [{ model: models.user, as: "assigneeUser" }] }
       ]
     });
-
 
  
     if (!packet) {
@@ -66,10 +83,13 @@ export const getUserPackets = async (req, res) => {
           model: models.file,
           as: "files",
         },
+        {model: models.user, as: "creatorUser"},
         {
           model: models.packetPhase,
           as: "phases",
-          required: false // Include all phases without filtering
+          required: false, 
+          include: [{ model: models.user, as: "assigneeUser" }]
+          
         }
       ],
       where: {

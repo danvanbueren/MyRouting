@@ -15,10 +15,7 @@ export default class file extends Model {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    path: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
+   
     createdAt: {
       type: DataTypes.DATE,
       allowNull: true,

@@ -7,6 +7,7 @@ import OtherAppIcon from "../assets/img/other_app_icon.jpg";
 import "../css/landing.css";
 
 
+
 const appSections = [
   {
     title: "LEARN MORE ABOUT...",

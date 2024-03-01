@@ -2,58 +2,108 @@ import express from "express";
 
 import { getUsers, getUserById } from "../controllers/userController.js";
 import { getUserPackets } from "../controllers/packetController.js";
-
+import { downloadFile } from "../controllers/fileController.js";
 
 export const userRoutes = express.Router();
 
+// OpenAPI component schemas
+const openAPISchemas = `
 /**
  * @openapi
  * components:
  *   schemas:
+ *     PacketDetail:
+ *       type: object
+ *       properties:
+ *         packetId:
+ *           type: string
+ *         name:
+ *           type: string
+ *         type:
+ *           type: string
+ *         comments:
+ *           type: string
+ *           nullable: true
+ *         currentPhase:
+ *           type: integer
+ *         creator:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         files:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/File'
+ *         creatorUser:
+ *           $ref: '#/components/schemas/User'
+ *         phases:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/PacketPhase'
+ *     File:
+ *       type: object
+ *       properties:
+ *         fileId:
+ *           type: string
+ *         name:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         packetId:
+ *           type: string
  *     User:
  *       type: object
- *       required:
- *         - UID
- *         - firstName
- *         - lastName
- *         - grade
- *         - FK_organizations_UID
- *         - permissionsSelf
- *         - permissionsGroups
  *       properties:
- *         UID:
- *           type: integer
- *           format: int64
- *           description: Auto-incremented ID and primary key.
+ *         userId:
+ *           type: string
  *         firstName:
  *           type: string
- *           description: The user's first name.
  *         lastName:
  *           type: string
- *           description: The user's last name.
  *         grade:
  *           type: string
- *           description: The user's grade.
- *         FK_organizations_UID:
- *           type: integer
- *           format: int64
- *           description: Foreign key linking to the organizations.
- *         permissionsSelf:
+ *         rank:
  *           type: string
- *           description: Permissions of the user on their own profile.
- *         permissionsGroups:
+ *         branch:
  *           type: string
- *           description: Permissions of the user on groups.
- *         FK_users_UID_directRater:
- *           type: integer
- *           format: int64
- *           description: Foreign key pointing to the user's direct rater. Nullable.
+ *         organizationId:
+ *           type: string
+ *         raterId:
+ *           type: string
  *           nullable: true
+ *         email:
+ *           type: string
+ *     PacketPhase:
+ *       type: object
+ *       properties:
+ *         packetPhaseId:
+ *           type: string
+ *         suspense:
+ *           type: string
+ *           format: date
+ *         comments:
+ *           type: string
+ *           nullable: true
+ *         stepNumber:
+ *           type: integer
+ *         completionDate:
+ *           type: string
+ *           format: date-time
+ *           nullable: true
+ *         packetId:
+ *           type: string
+ *         phase:
+ *           type: string
+ *         assignee:
+ *           type: string
+ *         assigneeUser:
+ *           $ref: '#/components/schemas/User'
  */
+`;
 
-
-
-
+// Route to get a list of users
 /**
  * @openapi
  * /api/users:
@@ -73,12 +123,10 @@ export const userRoutes = express.Router();
  */
 userRoutes.get("/users", getUsers);
 
-
-
-
+// Route to get a user by ID
 /**
  * @openapi
- * /users/{userId}:
+ * /api/users/{userId}:
  *   get:
  *     tags:
  *       - Users
@@ -88,7 +136,7 @@ userRoutes.get("/users", getUsers);
  *         name: userId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *         description: The user's ID
  *     responses:
  *       200:
@@ -102,5 +150,64 @@ userRoutes.get("/users", getUsers);
  */
 userRoutes.get("/users/:userId", getUserById);
 
-
+// Route to get a user's packets
+/**
+ * @openapi
+ * /api/users/{userId}/packets:
+ *   get:
+ *     tags:
+ *       - Users
+ *     summary: Returns a list of packets associated with a user
+ *     responses:
+ *       200:
+ *         description: A JSON array of packet objects
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/PacketDetail'
+ */
 userRoutes.get("/users/:userId/packets", getUserPackets);
+
+/**
+ * @openapi
+ * /api/users/{userId}/packets/{packetId}/files/{fileId}:
+ *   get:
+ *     tags:
+ *       - Files
+ *     summary: Download a PDF file
+ *     description: Downloads a specific PDF file associated with a user's packet.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *       - in: path
+ *         name: packetId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the packet
+ *       - in: path
+ *         name: fileId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the file to download
+ *     responses:
+ *       200:
+ *         description: The PDF file
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: File not found
+ *       401:
+ *         description: Unauthorized - User does not have permission to access this file
+ */
+userRoutes.get("/users/:userId/packets/:packetId/files/:fileId", downloadFile);

@@ -23,9 +23,19 @@ export default class packet extends Model {
       type: DataTypes.TEXT,
       allowNull: true
     },
+    currentPhase:{
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      field: "current_phase"
+    },
+
     creator:{
       type: DataTypes.UUID,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'user',
+        key: 'user_id'
+      }
     },
     createdAt: {
       type: DataTypes.DATE,

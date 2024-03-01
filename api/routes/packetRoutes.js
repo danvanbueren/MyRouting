@@ -1,6 +1,8 @@
 import express from "express";
 
-import { getPackets, getPacketById } from "../controllers/packetController.js";
+import { getPackets, getPacketById, createPacket } from "../controllers/packetController.js";
+import packet from "../models/packet.js";
+import { downloadFile } from "../controllers/fileController.js";
 
 export const packetRoutes = express.Router();
 
@@ -8,46 +10,96 @@ export const packetRoutes = express.Router();
  * @openapi
  * components:
  *   schemas:
+ *     PacketDetail:
+ *       type: object
+ *       properties:
+ *         packetId:
+ *           type: string
+ *         name:
+ *           type: string
+ *         type:
+ *           type: string
+ *         comments:
+ *           type: string
+ *           nullable: true
+ *         currentPhase:
+ *           type: integer
+ *         creator:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         files:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/File'
+ *         creatorUser:
+ *           $ref: '#/components/schemas/User'
+ *         phases:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/PacketPhase'
+ *     File:
+ *       type: object
+ *       properties:
+ *         fileId:
+ *           type: string
+ *         name:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         packetId:
+ *           type: string
  *     User:
  *       type: object
- *       required:
- *         - UID
- *         - firstName
- *         - lastName
- *         - grade
- *         - FK_organizations_UID
- *         - permissionsSelf
- *         - permissionsGroups
  *       properties:
- *         UID:
- *           type: integer
- *           format: int64
- *           description: Auto-incremented ID and primary key.
+ *         userId:
+ *           type: string
  *         firstName:
  *           type: string
- *           description: The user's first name.
  *         lastName:
  *           type: string
- *           description: The user's last name.
  *         grade:
  *           type: string
- *           description: The user's grade.
- *         FK_organizations_UID:
- *           type: integer
- *           format: int64
- *           description: Foreign key linking to the organizations.
- *         permissionsSelf:
+ *         rank:
  *           type: string
- *           description: Permissions of the user on their own profile.
- *         permissionsGroups:
+ *         branch:
  *           type: string
- *           description: Permissions of the user on groups.
- *         FK_users_UID_directRater:
- *           type: integer
- *           format: int64
- *           description: Foreign key pointing to the user's direct rater. Nullable.
+ *         organizationId:
+ *           type: string
+ *         raterId:
+ *           type: string
  *           nullable: true
+ *         email:
+ *           type: string
+ *     PacketPhase:
+ *       type: object
+ *       properties:
+ *         packetPhaseId:
+ *           type: string
+ *         suspense:
+ *           type: string
+ *           format: date
+ *         comments:
+ *           type: string
+ *           nullable: true
+ *         stepNumber:
+ *           type: integer
+ *         completionDate:
+ *           type: string
+ *           format: date-time
+ *           nullable: true
+ *         packetId:
+ *           type: string
+ *         phase:
+ *           type: string
+ *         assignee:
+ *           type: string
+ *         assigneeUser:
+ *           $ref: '#/components/schemas/User'
  */
+
 
 
 
@@ -67,7 +119,7 @@ export const packetRoutes = express.Router();
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/User'
+ *                 $ref: '#/components/schemas/PacketDetail'
  */
 packetRoutes.get("/packets", getPackets);
 
@@ -76,7 +128,7 @@ packetRoutes.get("/packets", getPackets);
 
 /**
  * @openapi
- * /packets/{packetId}:
+ * /api/packets/{packetId}:
  *   get:
  *     tags:
  *       - Packets
@@ -87,15 +139,20 @@ packetRoutes.get("/packets", getPackets);
  *         required: true
  *         schema:
  *           type: integer
- *         description: The user's ID
+ *         description: The packet's ID
  *     responses:
  *       200:
- *         description: A user object
+ *         description: A packet object
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/PacketDetail'
  *       404:
- *         description: User not found
+ *         description: Packet not found
  */
 packetRoutes.get("/packets/:packetId", getPacketById);
+
+
+packetRoutes.post("/packets", createPacket);
+
+packetRoutes.get("/packets/:packetId/files/:fileId", downloadFile);

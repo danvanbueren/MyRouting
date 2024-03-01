@@ -44,6 +44,7 @@ function Admin() {
 
 
 
+
     const getPackets = async () => {
       try {
         const response = await axios.get(
@@ -58,6 +59,7 @@ function Admin() {
       }
     };
     getPackets()
+
   }, []);
 
   return (
@@ -72,7 +74,9 @@ function Admin() {
                 className="btn btn-secondary rounded-0 me-2 mb-2"
                 data-bs-toggle="modal"
                 data-bs-target="#add-routing-modal"
+
                 onClick={() => setIsSearchModalOpen(true)}
+
               >
                 <span className="material-symbols-outlined align-text-bottom fs-5 pe-1">
                   add
@@ -112,7 +116,9 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_pending">
+
                <PacketTable packets={packets} />
+
           </div>
         </div>
 
@@ -124,6 +130,7 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_afpc">
+
           <PacketTable packets={packets} />
 
           </div>
@@ -137,7 +144,9 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_signature">
+
           <PacketTable packets={packets} />
+
 
           </div>
         </div>
@@ -150,7 +159,9 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_completed">
+
           <PacketTable packets={packets} />
+
           </div>
         </div>
 
@@ -160,13 +171,16 @@ function Admin() {
         ></div>
 
         <SearchMemberModal
+
           isOpen={isSearchModalOpen}
           onSelectMember={handleSelectMember}
           closeModal={() => setIsSearchModalOpen(false)}
         />
 
         <RoutingModal isOpen={isRoutingModalOpen} closeModal={() => setIsRoutingModalOpen(false)} />
-           
+
+
+
 
         <div
           className="modal fade"
