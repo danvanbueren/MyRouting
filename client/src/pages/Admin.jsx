@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import USAFLogo from "./assets/img/USAF_LOGO.svg";
-import USSFLogo from "./assets/img/USSF_LOGO.png";
-import UserLogo from "./assets/img/USER.svg";
+import USAFLogo from "../assets/img/USAF_LOGO.svg";
+import USSFLogo from "../assets/img/USSF_LOGO.png";
+import UserLogo from "../assets/img/USER.svg";
 import axios from "axios";
-import SearchMemberModal from "./components/SearchMemberModal";
+import SearchMemberModal from "../components/SearchMemberModal";
 
 function Admin() {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
