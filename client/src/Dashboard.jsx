@@ -3,7 +3,7 @@ import USAFLogo from "./assets/img/USAF_LOGO.svg";
 import USSFLogo from "./assets/img/USSF_LOGO.png";
 import UserLogo from "./assets/img/USER.svg";
 import axios from "axios";
-import RoutingModal from "./RoutingModal";
+import RoutingModal from "./components/RoutingModal";
 
 function Dashboard() {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });

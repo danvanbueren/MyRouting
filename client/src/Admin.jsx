@@ -4,21 +4,25 @@ import USSFLogo from "./assets/img/USSF_LOGO.png";
 import UserLogo from "./assets/img/USER.svg";
 import axios from "axios";
 import SearchMemberModal from "./components/SearchMemberModal";
-
+import RoutingModal from "./components/RoutingModal";
 function Admin() {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isRoutingModalOpen, setIsRoutingModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
 
   // Function to be passed to the modal
   const handleSelectMember = (member) => {
     setSelectedMember(member);
-    setIsModalOpen(false); // Optionally close the modal upon selection
+    setIsSearchModalOpen(false); // Optionally close the modal upon selection
+    setIsRoutingModalOpen(true);
     console.log("Selected Member:", member); // For demonstration, you can remove this line
+
+
   };
   const handleOpenModal = () => {
-    setIsModalOpen(true);
+    setIsSearchModalOpen(true);
   };
 
   useEffect(() => {
@@ -53,7 +57,7 @@ function Admin() {
                 className="btn btn-secondary rounded-0 me-2 mb-2"
                 data-bs-toggle="modal"
                 data-bs-target="#add-routing-modal"
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setIsSearchModalOpen(true)}
               >
                 <span className="material-symbols-outlined align-text-bottom fs-5 pe-1">
                   add
@@ -138,11 +142,16 @@ function Admin() {
           style={{ height: "4rem" }}
         ></div>
 
+   
+   
+   
         <SearchMemberModal
-          isOpen={isModalOpen}
+          isOpen={isSearchModalOpen}
           onSelectMember={handleSelectMember}
-          closeModal={() => setIsModalOpen(false)}
+          closeModal={() => setIsSearchModalOpen(false)}
         />
+
+        <RoutingModal isOpen={isRoutingModalOpen}  closeModal={() => setIsRoutingModalOpen(false)}/>
 
         <div
           className="modal fade"
