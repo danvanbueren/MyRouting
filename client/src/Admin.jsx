@@ -3,52 +3,43 @@ import USAFLogo from "./assets/img/USAF_LOGO.svg";
 import USSFLogo from "./assets/img/USSF_LOGO.png";
 import UserLogo from "./assets/img/USER.svg";
 import axios from "axios";
-import SearchMemberModal from "./SearchMemberModal";
+import SearchMemberModal from "./components/SearchMemberModal";
 
 function Admin() {
-const [user, setUser] = useState({firstName: "", lastName: "", rank: ""});
+  const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
 
-const [isModalOpen, setIsModalOpen] = useState(false);
-const [selectedMember, setSelectedMember] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
 
-// Function to be passed to the modal
-const handleSelectMember = (member) => {
-  setSelectedMember(member);
-  setIsModalOpen(false); // Optionally close the modal upon selection
-  console.log('Selected Member:', member); // For demonstration, you can remove this line
-};
-const handleOpenModal = () => {
-  setIsModalOpen(true);
-};
+  // Function to be passed to the modal
+  const handleSelectMember = (member) => {
+    setSelectedMember(member);
+    setIsModalOpen(false); // Optionally close the modal upon selection
+    console.log("Selected Member:", member); // For demonstration, you can remove this line
+  };
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     document.title = "Demo myRouting Admin";
 
-
     const getUser = async () => {
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_API
+          }/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`
+        );
+        setUser(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Get user failed:", error);
+      }
+    };
 
-        try {
-       
-            const response = await axios.get(
-              `http://localhost:3000/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`
-            );
-            setUser(response.data);
-            console.log(response.data)
-        
-        } catch (error) {
-          console.error("Get user failed:", error);
-  
-        }
-      };
-  
-      getUser();
+    getUser();
   }, []);
-
-
-
-
-
-
 
   return (
     <>
@@ -62,7 +53,7 @@ const handleOpenModal = () => {
                 className="btn btn-secondary rounded-0 me-2 mb-2"
                 data-bs-toggle="modal"
                 data-bs-target="#add-routing-modal"
-                onClick={()=> setIsModalOpen(true) }
+                onClick={() => setIsModalOpen(true)}
               >
                 <span className="material-symbols-outlined align-text-bottom fs-5 pe-1">
                   add
@@ -142,9 +133,16 @@ const handleOpenModal = () => {
           </div>
         </div>
 
-        <div className="w-100 pt-3 border-bottom" style={{height: "4rem"}}></div>
+        <div
+          className="w-100 pt-3 border-bottom"
+          style={{ height: "4rem" }}
+        ></div>
 
-         <SearchMemberModal isOpen={isModalOpen} onSelectMember={handleSelectMember} closeModal={() => setIsModalOpen(false)}  />
+        <SearchMemberModal
+          isOpen={isModalOpen}
+          onSelectMember={handleSelectMember}
+          closeModal={() => setIsModalOpen(false)}
+        />
 
         <div
           className="modal fade"
@@ -181,7 +179,7 @@ const handleOpenModal = () => {
                       name="rg2"
                       id="r1d"
                     />
-                    <label className="form-check-label"  htmlFor="r1d">
+                    <label className="form-check-label" htmlFor="r1d">
                       Memo for Record
                     </label>
                   </div>
@@ -193,7 +191,7 @@ const handleOpenModal = () => {
                       name="rg2"
                       id="r1c"
                     />
-                    <label className="form-check-label"  htmlFor="r1c">
+                    <label className="form-check-label" htmlFor="r1c">
                       DEROS Extension
                     </label>
                   </div>
@@ -205,7 +203,7 @@ const handleOpenModal = () => {
                       name="rg2"
                       id="r1b"
                     />
-                    <label className="form-check-label"  htmlFor="r1b">
+                    <label className="form-check-label" htmlFor="r1b">
                       Command Sponsorship
                     </label>
                   </div>
@@ -217,7 +215,7 @@ const handleOpenModal = () => {
                       name="rg2"
                       id="r1a"
                     />
-                    <label className="form-check-label"  htmlFor="r1a">
+                    <label className="form-check-label" htmlFor="r1a">
                       Training Report
                     </label>
                   </div>
@@ -252,7 +250,7 @@ const handleOpenModal = () => {
                       name="rg3"
                       id="r2a"
                     />
-                    <label className="form-check-label"  htmlFor="r2a">
+                    <label className="form-check-label" htmlFor="r2a">
                       Rater
                     </label>
                   </div>
@@ -264,7 +262,7 @@ const handleOpenModal = () => {
                       name="rg3"
                       id="r2b"
                     />
-                    <label className="form-check-label"  htmlFor="r2b">
+                    <label className="form-check-label" htmlFor="r2b">
                       CSS
                     </label>
                   </div>
@@ -276,7 +274,7 @@ const handleOpenModal = () => {
                       name="rg3"
                       id="r2c"
                     />
-                    <label className="form-check-label"  htmlFor="r2c">
+                    <label className="form-check-label" htmlFor="r2c">
                       Commander
                     </label>
                   </div>
@@ -288,7 +286,7 @@ const handleOpenModal = () => {
                       name="rg3"
                       id="r2d"
                     />
-                    <label className="form-check-label"  htmlFor="r2d">
+                    <label className="form-check-label" htmlFor="r2d">
                       MPF
                     </label>
                   </div>
@@ -300,7 +298,7 @@ const handleOpenModal = () => {
                       name="rg3"
                       id="r2e"
                     />
-                    <label className="form-check-label"  htmlFor="r2e">
+                    <label className="form-check-label" htmlFor="r2e">
                       AFPC
                     </label>
                   </div>
@@ -331,9 +329,9 @@ const handleOpenModal = () => {
                       className="form-control"
                       placeholder="Summary"
                       id="example-textarea-2"
-                      style={{height: "80px"}}
+                      style={{ height: "80px" }}
                     ></textarea>
-                    <label  htmlFor="example-textarea-2">Summary</label>
+                    <label htmlFor="example-textarea-2">Summary</label>
                   </div>
 
                   <div className="border-bottom my-3"></div>
@@ -350,7 +348,7 @@ const handleOpenModal = () => {
                       />
                       <label
                         className="input-group-text"
-                         htmlFor="example-file-input-1"
+                        htmlFor="example-file-input-1"
                       >
                         Upload
                       </label>
