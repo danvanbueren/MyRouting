@@ -49,11 +49,22 @@ function PacketTable({ packets, sectionName }) {
               <td>{packet.type}</td>
               <td>
                 <p>
-                  Awaiting{" "}
-                  {packet.phases[packet.currentPhase].phase.toLowerCase()} by{" "}
-                  {packet.phases[packet.currentPhase].assigneeUser.rank}{" "}
-                  {packet.phases[packet.currentPhase].assigneeUser.firstName}{" "}
-                  {packet.phases[packet.currentPhase].assigneeUser.lastName}
+                  {packet?.phases[packet?.currentPhase]?.phase &&
+                  packet?.phases[packet?.currentPhase]?.assigneeUser.rank &&
+                  packet?.phases[packet?.currentPhase]?.assigneeUser
+                    .firstName &&
+                  packet?.phases[packet?.currentPhase]?.assigneeUser.lastName
+                    ? `Awaiting ${packet.phases[
+                        packet.currentPhase
+                      ].phase.toLowerCase()} by ${
+                        packet.phases[packet.currentPhase].assigneeUser.rank
+                      } ${
+                        packet.phases[packet.currentPhase].assigneeUser
+                          .firstName
+                      } ${
+                        packet.phases[packet.currentPhase].assigneeUser.lastName
+                      }`
+                    : "Error Fetching"}
                 </p>
               </td>
               <td>
