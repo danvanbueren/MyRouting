@@ -1,10 +1,10 @@
-import React from 'react';
-import { Table, Button, Alert, Container, Row, Col } from 'react-bootstrap';
+import React from "react";
+import { Table, Button, Alert, Container, Row, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import PacketDisplayModal from "../components/PacketDisplayModal";
 
-function PacketTable({ packets }) {
-  const [selectedPacket,setSelectedPacket]=useState(null);
+function PacketTable({ packets, sectionName }) {
+  const [selectedPacket, setSelectedPacket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (packets.length < 1) {
@@ -12,7 +12,10 @@ function PacketTable({ packets }) {
       <Container>
         <Row className="align-items-center">
           <Col xs="auto" className="p-0 m-0">
-            <span className="material-symbols-outlined" style={{ fontSize: '2.5rem' }}>
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: "2.5rem" }}
+            >
               info
             </span>
           </Col>
@@ -27,55 +30,62 @@ function PacketTable({ packets }) {
 
   return (
     <>
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Recipient</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {packets.map((packet) => (
-          <tr key={packet.packetId}>
-            <td>{packet.creatorUser.rank} {packet.creatorUser.firstName} {packet.creatorUser.lastName} </td>
-            <td>{packet.type}</td>
-            <td>
-             <p>
-                Awaiting {packet.phases[packet.currentPhase].phase.toLowerCase()} by   {packet.phases[packet.currentPhase].assigneeUser.rank} {packet.phases[packet.currentPhase].assigneeUser.firstName} {packet.phases[packet.currentPhase].assigneeUser.lastName}
-             </p>
-          
-
-            </td>
-            <td>
-              <Button variant="secondary" className="me-2" size="sm"     onClick={() => {
-                                  setSelectedPacket(packet);
-                                  setIsModalOpen(true);
-                                }}>
-                View
-              </Button>
-              <Button variant="secondary" size="sm" disabled>
-                Reassign
-              </Button>
-            </td>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Recipient</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
+        </thead>
+        <tbody>
+          {packets.map((packet) => (
+            <tr key={packet.packetId}>
+              <td>
+                {packet.creatorUser.rank} {packet.creatorUser.firstName}{" "}
+                {packet.creatorUser.lastName}{" "}
+              </td>
+              <td>{packet.type}</td>
+              <td>
+                <p>
+                  Awaiting{" "}
+                  {packet.phases[packet.currentPhase].phase.toLowerCase()} by{" "}
+                  {packet.phases[packet.currentPhase].assigneeUser.rank}{" "}
+                  {packet.phases[packet.currentPhase].assigneeUser.firstName}{" "}
+                  {packet.phases[packet.currentPhase].assigneeUser.lastName}
+                </p>
+              </td>
+              <td>
+                <Button
+                  variant="secondary"
+                  className="me-2"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedPacket(packet);
+                    setIsModalOpen(true);
+                  }}
+                >
+                  View
+                </Button>
+                <Button variant="secondary" size="sm" disabled>
+                  Reassign
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
 
-
-        ))}
-      </tbody>
-    </Table>
- 
-    <PacketDisplayModal
-isOpen={isModalOpen}
-closeModal={() => {
-setIsModalOpen(false);
-setSelectedPacket(null);
-}}
-packet={selectedPacket}
-/>   
-  </>
-          
+      <PacketDisplayModal
+        isOpen={isModalOpen}
+        closeModal={() => {
+          setIsModalOpen(false);
+          setSelectedPacket(null);
+        }}
+        packet={selectedPacket}
+      />
+    </>
   );
 }
 

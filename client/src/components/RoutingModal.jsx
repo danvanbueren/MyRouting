@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, InputGroup } from "react-bootstrap";
-
-function RoutingModal({ isOpen, closeModal }) {
-  const [selectedType, setSelectedType] = useState("");
+import axios from "axios";
+function RoutingModal({ isOpen, closeModal, user }) {
   const [isOtherSelected, setIsOtherSelected] = useState(false);
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedRecipient, setSelectedRecipient] = useState("");
+  const [summary, setSummary] = useState("");
+  const [selectedFile, setSelectedFile] = useState("");
+  const [suspenseDate, setSuspenseDate] = useState("");
 
   const handleRadioChange = (event) => {
     const { value } = event.target;
     if (value === "Other") {
       setIsOtherSelected(true);
-      // Only set selectedType to 'Other' initially, actual value is set on text input change
-      setSelectedType("");
+      setSelectedType(null);
     } else {
       setIsOtherSelected(false);
       setSelectedType(value);
@@ -21,18 +24,52 @@ function RoutingModal({ isOpen, closeModal }) {
     setSelectedType(event.target.value);
   };
 
-  const [selectedRecipient, setSelectedRecipient] = useState("");
-  const [summary, setSummary] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Selected Type:", selectedType);
-    console.log("Selected Recipient:", selectedRecipient);
-    console.log("Summary:", summary);
-    console.log("Selected File:", selectedFile);
-    // Implement form submission logic here
+
+    const packetData = {
+      name: user.lastName + "_" + selectedType.trim() + "_packet",
+      type: selectedType,
+      comments: summary,
+      currentPhase: 0,
+      creator: user.userId,
+      createdAt: new Date().toISOString(),
+      files: [
+        {
+          name: selectedFile.name,
+          createdAt: new Date().toISOString(),
+          file: selectedFile,
+        },
+      ],
+      phases: [
+        {
+          suspense: suspenseDate,
+          comments: "",
+          stepNumber: 0,
+          completionDate: "",
+          phase: "Review",
+          assignee: selectedRecipient.Rater,
+        },
+      ],
+    };
+
+    axios
+      .post(
+        `https://routing.inicolai.com/api/users/${user.userId}/packets`,
+        packetData
+      )
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     closeModal(); // Close modal after form submission
+    setSelectedType("");
+    setSelectedRecipient("");
+    setSummary("");
+    setSelectedFile("");
   };
 
   return (
@@ -102,7 +139,9 @@ function RoutingModal({ isOpen, closeModal }) {
                 placeholder="Specify other type"
                 onChange={handleTextInputChange}
                 disabled={!isOtherSelected}
-                value={isOtherSelected ? selectedType : ""}
+                value={
+                  isOtherSelected && selectedType !== null ? selectedType : ""
+                }
               />
             </InputGroup>
           </Form.Group>
@@ -117,8 +156,13 @@ function RoutingModal({ isOpen, closeModal }) {
               label="Rater"
               name="recipient"
               id="recipient1"
-              onChange={() => setSelectedRecipient("Rater")}
-              checked={selectedRecipient === "Rater"}
+              onChange={() =>
+                setSelectedRecipient({ Rater: user.rater.userId })
+              }
+              checked={
+                selectedRecipient &&
+                selectedRecipient.Rater === user.rater.userId
+              }
             />
 
             <Form.Check
@@ -173,7 +217,20 @@ function RoutingModal({ isOpen, closeModal }) {
           <div class="border-bottom my-3"></div>
 
           <Form.Group className="mb-3">
-            <Form.Label><b>Add Documents</b></Form.Label>
+            <Form.Label>
+              <b>Suspense Date</b>
+            </Form.Label>
+            <Form.Control
+              type="date"
+              value={suspenseDate}
+              onChange={(e) => setSuspenseDate(e.target.value)}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <b>Add Documents</b>
+            </Form.Label>
             <Form.Control
               type="file"
               accept=".pdf"
