@@ -51,6 +51,20 @@ function Dashboard() {
     setIsPacketModalOpen(true);
   };
 
+  const readyForActionPackets = packets.filter(
+    (packet) =>
+      packet.phases.assignee === user.userId &&
+      packet.phases.phase !== "Completed"
+  );
+  const awaitingCoordinationPackets = packets.filter(
+    (packet) =>
+      packet.phases.assignee !== user.userId &&
+      packet.phases.phase !== "Completed"
+  );
+  const completedPackets = packets.filter(
+    (packet) => packet.phases.phase === "Completed"
+  );
+
   return (
     <>
       <div className="container-fluid p-0" style={{ width: "79%" }}>
@@ -103,9 +117,46 @@ function Dashboard() {
               </span>
             </div>
             <div className="col">
-              <h6>No Items Pending</h6>
-
-              <span>There are currently no pending items.</span>
+              {readyForActionPackets.length > 0 ? (
+                <div className="table-responsive">
+                  <table className="table">
+                    <thead>
+                      <tr style={{ textWrap: "nowrap" }}>
+                        <th>Rank</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Select Packet</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {readyForActionPackets.map((packet, index) => (
+                        <tr key={index}>
+                          <td>{user.rank}</td>
+                          <td>{user.firstName}</td>
+                          <td>{user.lastName}</td>
+                          <td>{user.email}</td>
+                          <td>
+                            <button
+                              variant="primary"
+                              onClick={() => {
+                                handleSelectPacket(packet);
+                              }}
+                            >
+                              Select
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <>
+                  <h6>No Items Pending</h6>
+                  <span>There are currently no pending items.</span>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -127,42 +178,40 @@ function Dashboard() {
               </span>
             </div>
             <div className="col">
-              {packets && packets.length > 0 ? (
-                <>
-                  <div className="table-responsive">
-                    <table className="table">
-                      <thead>
-                        <tr style={{ textWrap: "nowrap" }}>
-                          <th>Rank</th>
-                          <th>First Name</th>
-                          <th>Last Name</th>
-                          <th>Email</th>
-                          <th>Select Packet</th>
+              {awaitingCoordinationPackets.length > 0 ? (
+                <div className="table-responsive">
+                  <table className="table">
+                    <thead>
+                      <tr style={{ textWrap: "nowrap" }}>
+                        <th>Rank</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Select Packet</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {awaitingCoordinationPackets.map((packet, index) => (
+                        <tr key={index}>
+                          <td>{user.rank}</td>
+                          <td>{user.firstName}</td>
+                          <td>{user.lastName}</td>
+                          <td>{user.email}</td>
+                          <td>
+                            <button
+                              variant="primary"
+                              onClick={() => {
+                                handleSelectPacket(packet);
+                              }}
+                            >
+                              Select
+                            </button>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {packets.map((packet, index) => (
-                          <tr key={index}>
-                            <td>{user.rank}</td>
-                            <td>{user.firstName}</td>
-                            <td>{user.lastName}</td>
-                            <td>{user.email}</td>
-                            <td>
-                              <button
-                                variant="primary"
-                                onClick={() => {
-                                  handleSelectPacket(packet);
-                                }}
-                              >
-                                Select
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               ) : (
                 <>
                   <h6>No Items Pending</h6>
@@ -189,10 +238,46 @@ function Dashboard() {
                 info
               </span>
             </div>
-            <div className="col">
-              <h6>No Items Pending</h6>
-              <span>There are currently no pending items.</span>
-            </div>
+            {completedPackets.length > 0 ? (
+              <div className="table-responsive">
+                <table className="table">
+                  <thead>
+                    <tr style={{ textWrap: "nowrap" }}>
+                      <th>Rank</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Email</th>
+                      <th>Select Packet</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {completedPackets.map((packet, index) => (
+                      <tr key={index}>
+                        <td>{user.rank}</td>
+                        <td>{user.firstName}</td>
+                        <td>{user.lastName}</td>
+                        <td>{user.email}</td>
+                        <td>
+                          <button
+                            variant="primary"
+                            onClick={() => {
+                              handleSelectPacket(packet);
+                            }}
+                          >
+                            Select
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <>
+                <h6>No Completed Items</h6>
+                <span>There are currently no completed items.</span>
+              </>
+            )}
           </div>
         </div>
       </div>
