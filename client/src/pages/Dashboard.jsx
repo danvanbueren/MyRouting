@@ -5,6 +5,7 @@ import UserLogo from "../assets/img/USER.svg";
 import axios from "axios";
 import RoutingModal from "../components/RoutingModal";
 import PacketDisplayModal from "../components/PacketDisplayModal";
+import UserPacketTable from "../components/UserPacketTable";
 
 function Dashboard() {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
@@ -100,193 +101,50 @@ function Dashboard() {
           </h6>
         </div>
 
+
         <div className="w-100 pt-3">
           <h3 className="pb-2">
-            Ready For Action
+            Ready for Action 
             <span className="material-symbols-outlined ps-2 align-text-center">
               help
             </span>
           </h3>
-          <div className="border p-3 row">
-            <div className="col-auto p-0 m-0">
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: "2.5rem" }}
-              >
-                info
-              </span>
-            </div>
-            <div className="col">
-              {readyForActionPackets.length > 0 ? (
-                <div className="table-responsive">
-                  <table className="table">
-                    <thead>
-                      <tr style={{ textWrap: "nowrap" }}>
-                        <th>Rank</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Select Packet</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {readyForActionPackets.map((packet, index) => (
-                        <tr key={index}>
-                          <td>{user.rank}</td>
-                          <td>{user.firstName}</td>
-                          <td>{user.lastName}</td>
-                          <td>{user.email}</td>
-                          <td>
-                            <button
-                              variant="primary"
-                              onClick={() => {
-                                handleSelectPacket(packet);
-                              }}
-                            >
-                              Select
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <>
-                  <h6>No Items Pending</h6>
-                  <span>There are currently no pending items.</span>
-                </>
-              )}
-            </div>
+          <div className="border p-3 row" id="element_table_pending">
+          <UserPacketTable packets={readyForActionPackets} user={user}/>
+          </div>
+        </div>
+        <div className="w-100 pt-3">
+          <h3 className="pb-2">
+          In Coordination
+            <span className="material-symbols-outlined ps-2 align-text-center">
+              help
+            </span>
+          </h3>
+          <div className="border p-3 row" id="element_table_pending">
+          <UserPacketTable packets={awaitingCoordinationPackets} user={user} />
           </div>
         </div>
 
         <div className="w-100 pt-3">
           <h3 className="pb-2">
-            In Coordination
+          Recently Completed
             <span className="material-symbols-outlined ps-2 align-text-center">
               help
             </span>
           </h3>
-          <div className="border p-3 row">
-            <div className="col-auto p-0 m-0">
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: "2.5rem" }}
-              >
-                info
-              </span>
-            </div>
-            <div className="col">
-              {awaitingCoordinationPackets.length > 0 ? (
-                <div className="table-responsive">
-                  <table className="table">
-                    <thead>
-                      <tr style={{ textWrap: "nowrap" }}>
-                        <th>Rank</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Select Packet</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {awaitingCoordinationPackets.map((packet, index) => (
-                        <tr key={index}>
-                          <td>{user.rank}</td>
-                          <td>{user.firstName}</td>
-                          <td>{user.lastName}</td>
-                          <td>{user.email}</td>
-                          <td>
-                            <button
-                              variant="primary"
-                              onClick={() => {
-                                handleSelectPacket(packet);
-                              }}
-                            >
-                              Select
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <>
-                  <h6>No Items Pending</h6>
-                  <span>There are currently no pending items.</span>
-                </>
-              )}
-            </div>
+          <div className="border p-3 row" id="element_table_pending">
+          <UserPacketTable packets={completedPackets} user={user}/>
           </div>
         </div>
 
-        <div className="w-100 pt-3">
-          <h3 className="pb-2">
-            Recently Completed
-            <span className="material-symbols-outlined ps-2 align-text-center">
-              help
-            </span>
-          </h3>
-          <div className="border p-3 row">
-            <div className="col-auto p-0 m-0">
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: "2.5rem" }}
-              >
-                info
-              </span>
-            </div>
-            {completedPackets.length > 0 ? (
-              <div className="table-responsive">
-                <table className="table">
-                  <thead>
-                    <tr style={{ textWrap: "nowrap" }}>
-                      <th>Rank</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Email</th>
-                      <th>Select Packet</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {completedPackets.map((packet, index) => (
-                      <tr key={index}>
-                        <td>{user.rank}</td>
-                        <td>{user.firstName}</td>
-                        <td>{user.lastName}</td>
-                        <td>{user.email}</td>
-                        <td>
-                          <button
-                            variant="primary"
-                            onClick={() => {
-                              handleSelectPacket(packet);
-                            }}
-                          >
-                            Select
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <>
-                <h6>No Completed Items</h6>
-                <span>There are currently no completed items.</span>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
 
+           
+      
+      </div>      
       <div
         className="w-100 pt-3 border-bottom"
         style={{ height: "4rem" }}
       ></div>
-
       <RoutingModal
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
