@@ -9,9 +9,12 @@ import PacketTable from "../components/PacketTable";
 
 function Admin() {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
-  const [packets, setPackets] = useState([]);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isRoutingModalOpen, setIsRoutingModalOpen] = useState(false);
+  const [awaitingReview, setAwaitingReview] = useState([]);
+  const [awaitingSignature, setAwaitingSignature] = useState([]);
+  const [submittedAFPC, setSubmittedAFPC] = useState([]);
+  const [recentlyCompleted, setRecentlyCompleted] = useState([]);
   const [selectedMember, setSelectedMember] = useState(null);
 
   // Function to be passed to the modal
@@ -19,6 +22,18 @@ function Admin() {
     setSelectedMember(member);
     setIsSearchModalOpen(false);
     setIsRoutingModalOpen(true);
+  };
+
+  const filterPackets = (packets) => {
+    const awaitingReview = packets.filter(packet => packet.phases[packet.currentPhase].phase === "REVIEW");
+    const awaitingSignature = packets.filter(packet => packet.phases[packet.currentPhase].phase === "SIGNATURE");
+    const submittedAFPC = packets.filter(packet => packet.phases[packet.currentPhase].phase === "AFPC");
+    const recentlyCompleted = packets.filter(packet => packet.phases[packet.currentPhase].phase === "COMPLETED");
+
+    setAwaitingReview(awaitingReview);
+    setAwaitingSignature(awaitingSignature);
+    setSubmittedAFPC(submittedAFPC);
+    setRecentlyCompleted(recentlyCompleted);
   };
 
   useEffect(() => {
@@ -32,7 +47,6 @@ function Admin() {
           }/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`
         );
         setUser(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Get user failed:", error);
       }
@@ -45,18 +59,19 @@ function Admin() {
         const response = await axios.get(
           `${import.meta.env.VITE_API}/api/packets`
         );
-        setPackets(response.data);
-        console.log(response.data);
+        filterPackets(response.data);
       } catch (error) {
         console.error("Get user failed:", error);
       }
     };
-    getPackets();
+    getPackets()
+
+
   }, []);
 
+
   return (
-    <>
-      <div className="container-fluid p-0" style={{ width: "79%" }}>
+    <div className="container-fluid p-0" style={{ width: "79%" }}>
         <div className="w-100 border-bottom">
           <div className="d-flex justify-content-between align-items-end">
             <h3 className="pb-2">myRouting Admin Dashboard</h3>
@@ -100,13 +115,13 @@ function Admin() {
 
         <div className="w-100 pt-3">
           <h3 className="pb-2">
-            Pending Action
+            Pending Review
             <span className="material-symbols-outlined ps-2 align-text-center">
               help
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_pending">
-            <PacketTable packets={packets} sectionName={"PendingAction"} />
+            <PacketTable packets={awaitingReview} sectionName={"PendingAction"} />
           </div>
         </div>
         <div className="w-100 pt-3">
@@ -117,7 +132,7 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_signature">
-            <PacketTable packets={packets} sectionName={"awaitingSignature"} />
+            <PacketTable packets={awaitingSignature} sectionName={"awaitingSignature"} />
           </div>
         </div>
 
@@ -129,7 +144,7 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_afpc">
-            <PacketTable packets={packets} sectionName={"submittedAFPC"} />
+            <PacketTable packets={submittedAFPC} sectionName={"submittedAFPC"} />
           </div>
         </div>
 
@@ -141,7 +156,7 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_completed">
-            <PacketTable packets={packets} sectionName={"recentlyCompleted"} />
+            <PacketTable packets={recentlyCompleted} sectionName={"recentlyCompleted"} />
           </div>
         </div>
 
@@ -174,7 +189,6 @@ function Admin() {
           </div>
         </div>
       </div>
-    </>
   );
 }
 
