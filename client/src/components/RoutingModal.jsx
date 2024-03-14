@@ -10,12 +10,19 @@ function RoutingModal({ isOpen, closeModal, user }) {
   const [suspenseDate, setSuspenseDate] = useState("");
 
   const handleRadioChange = (e) => {
-    setSelectedType(e.target.value);
-    setIsOtherSelected(e.target.value === "Other");
+    if (e.target.value === "Other") {
+      setIsOtherSelected(true);
+      setSelectedType("");
+    } else {
+      setIsOtherSelected(false);
+      setSelectedType(e.target.value);
+    }
   };
 
   const handleTextInputChange = (event) => {
-    setSelectedType(event.target.value);
+    if (isOtherSelected) {
+      setSelectedType(event.target.value);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -47,18 +54,18 @@ function RoutingModal({ isOpen, closeModal, user }) {
       ],
     };
 
-    axios
-      .post(
-        `https://routing.inicolai.com/api/users/${user.userId}/packets`,
-        packetData
-      )
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-
+    // axios
+    //   .post(
+    //     `https://routing.inicolai.com/api/users/${user.userId}/packets`,
+    //     packetData
+    //   )
+    //   .then((response) => {
+    //     console.log(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
+    console.log(packetData);
     closeModal();
     setSelectedType("");
     setSelectedRecipient("");
