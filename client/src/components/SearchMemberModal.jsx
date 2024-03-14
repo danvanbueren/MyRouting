@@ -37,7 +37,7 @@ const rankOptions = [
 
 const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
   const [searchParams, setSearchParams] = useState({
-    rank: "ALL",
+    rank: "ALL" || "",
     firstName: "",
     lastName: "",
     email: "",
@@ -79,6 +79,16 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
     });
   };
 
+  const handleModalClose = () => {
+    setSelectedMember(null);
+    setSearchParams({
+      rank: "ALL",
+      firstName: "",
+      lastName: "",
+      email: "",
+    });
+    closeModal();
+  };
   const TableHeader = () => (
     <thead>
       <tr>
@@ -92,7 +102,7 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
   );
 
   const TableRow = ({ member, setSelectedMember }) => (
-    <tr>
+    <tr className={selectedMember === member ? "table-success" : ""}>
       <td>{member.rank}</td>
       <td>{member.firstName}</td>
       <td>{member.lastName}</td>
@@ -105,7 +115,11 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
     </tr>
   );
 
-  const MemberTable = ({ searchResults, setSelectedMember }) => (
+  const MemberTable = ({
+    searchResults,
+    setSelectedMember,
+    selectedMember,
+  }) => (
     <Table>
       <TableHeader />
       <tbody>
@@ -114,6 +128,7 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
             key={index}
             member={member}
             setSelectedMember={setSelectedMember}
+            selectedMember={selectedMember}
           />
         ))}
       </tbody>
@@ -121,7 +136,13 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
   );
 
   return (
-    <Modal show={isOpen} onHide={closeModal} size="lg" centered scrollable>
+    <Modal
+      show={isOpen}
+      onHide={handleModalClose}
+      size="lg"
+      centered
+      scrollable
+    >
       <Modal.Header closeButton>
         <Modal.Title>Search Members</Modal.Title>
       </Modal.Header>
@@ -178,12 +199,13 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
             <MemberTable
               searchResults={searchResults}
               setSelectedMember={setSelectedMember}
+              selectedMember={selectedMember}
             />
           </div>
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={closeModal}>
+        <Button variant="secondary" onClick={handleModalClose}>
           Close
         </Button>
         <Button
