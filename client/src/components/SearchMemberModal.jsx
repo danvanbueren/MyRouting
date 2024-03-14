@@ -102,7 +102,7 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
   );
 
   const TableRow = ({ member, setSelectedMember }) => (
-    <tr className={selectedMember === member ? "table-success" : ""}>
+    <tr className={selectedMember === member ? "table-active" : ""}>
       <td>{member.rank}</td>
       <td>{member.firstName}</td>
       <td>{member.lastName}</td>
