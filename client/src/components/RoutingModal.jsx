@@ -9,15 +9,9 @@ function RoutingModal({ isOpen, closeModal, user }) {
   const [selectedFile, setSelectedFile] = useState("");
   const [suspenseDate, setSuspenseDate] = useState("");
 
-  const handleRadioChange = (event) => {
-    const { value } = event.target;
-    if (value === "Other") {
-      setIsOtherSelected(true);
-      setSelectedType(null);
-    } else {
-      setIsOtherSelected(false);
-      setSelectedType(value);
-    }
+  const handleRadioChange = (e) => {
+    setSelectedType(e.target.value);
+    setIsOtherSelected(e.target.value === "Other");
   };
 
   const handleTextInputChange = (event) => {
@@ -65,7 +59,7 @@ function RoutingModal({ isOpen, closeModal, user }) {
         console.error(error);
       });
 
-    closeModal(); // Close modal after form submission
+    closeModal();
     setSelectedType("");
     setSelectedRecipient("");
     setSummary("");
@@ -95,7 +89,9 @@ function RoutingModal({ isOpen, closeModal, user }) {
               label="Memo for Record"
               name="type"
               id="type1"
-              onChange={() => setSelectedType("Memo for Record")}
+              onChange={() =>
+                handleRadioChange({ target: { value: "Memo for Record" } })
+              }
               checked={selectedType === "Memo for Record"}
             />
 
@@ -104,15 +100,20 @@ function RoutingModal({ isOpen, closeModal, user }) {
               label="DEROS Extension"
               name="type"
               id="type2"
-              onChange={() => setSelectedType("DEROS Extension")}
+              onChange={() =>
+                handleRadioChange({ target: { value: "DEROS Extension" } })
+              }
               checked={selectedType === "DEROS Extension"}
             />
+
             <Form.Check
               type="radio"
               label="Command Sponsorship"
               name="type"
               id="type3"
-              onChange={() => setSelectedType("Command Sponsorship")}
+              onChange={() =>
+                handleRadioChange({ target: { value: "Command Sponsorship" } })
+              }
               checked={selectedType === "Command Sponsorship"}
             />
 
@@ -121,9 +122,12 @@ function RoutingModal({ isOpen, closeModal, user }) {
               label="Training Report"
               name="type"
               id="type4"
-              onChange={() => setSelectedType("Training Report")}
+              onChange={() =>
+                handleRadioChange({ target: { value: "Training Report" } })
+              }
               checked={selectedType === "Training Report"}
             />
+
             <InputGroup>
               <InputGroup.Text>
                 <Form.Check
@@ -139,9 +143,7 @@ function RoutingModal({ isOpen, closeModal, user }) {
                 placeholder="Specify other type"
                 onChange={handleTextInputChange}
                 disabled={!isOtherSelected}
-                value={
-                  isOtherSelected && selectedType !== null ? selectedType : ""
-                }
+                value={isOtherSelected ? selectedType : ""}
               />
             </InputGroup>
           </Form.Group>
