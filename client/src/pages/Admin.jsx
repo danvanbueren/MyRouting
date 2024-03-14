@@ -17,11 +17,9 @@ function Admin() {
   // Function to be passed to the modal
   const handleSelectMember = (member) => {
     setSelectedMember(member);
-    setIsSearchModalOpen(false); 
-    setIsRoutingModalOpen(true)
-
+    setIsSearchModalOpen(false);
+    setIsRoutingModalOpen(true);
   };
-
 
   useEffect(() => {
     document.title = "Demo myRouting Admin";
@@ -42,15 +40,10 @@ function Admin() {
 
     getUser();
 
-
-
-
     const getPackets = async () => {
       try {
         const response = await axios.get(
-          `${
-            import.meta.env.VITE_API
-          }/api/packets`
+          `${import.meta.env.VITE_API}/api/packets`
         );
         setPackets(response.data);
         console.log(response.data);
@@ -58,8 +51,7 @@ function Admin() {
         console.error("Get user failed:", error);
       }
     };
-    getPackets()
-
+    getPackets();
   }, []);
 
   return (
@@ -74,9 +66,7 @@ function Admin() {
                 className="btn btn-secondary rounded-0 me-2 mb-2"
                 data-bs-toggle="modal"
                 data-bs-target="#add-routing-modal"
-
                 onClick={() => setIsSearchModalOpen(true)}
-
               >
                 <span className="material-symbols-outlined align-text-bottom fs-5 pe-1">
                   add
@@ -116,9 +106,18 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_pending">
-
-               <PacketTable packets={packets} />
-
+            <PacketTable packets={packets} sectionName={"PendingAction"} />
+          </div>
+        </div>
+        <div className="w-100 pt-3">
+          <h3 className="pb-2">
+            Awaiting Signature
+            <span className="material-symbols-outlined ps-2 align-text-center">
+              help
+            </span>
+          </h3>
+          <div className="border p-3 row" id="element_table_signature">
+            <PacketTable packets={packets} sectionName={"awaitingSignature"} />
           </div>
         </div>
 
@@ -130,24 +129,7 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_afpc">
-
-          <PacketTable packets={packets} />
-
-          </div>
-        </div>
-
-        <div className="w-100 pt-3">
-          <h3 className="pb-2">
-            Awaiting Signature
-            <span className="material-symbols-outlined ps-2 align-text-center">
-              help
-            </span>
-          </h3>
-          <div className="border p-3 row" id="element_table_signature">
-
-          <PacketTable packets={packets} />
-
-
+            <PacketTable packets={packets} sectionName={"submittedAFPC"} />
           </div>
         </div>
 
@@ -159,9 +141,7 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_completed">
-
-          <PacketTable packets={packets} />
-
+            <PacketTable packets={packets} sectionName={"recentlyCompleted"} />
           </div>
         </div>
 
@@ -171,16 +151,15 @@ function Admin() {
         ></div>
 
         <SearchMemberModal
-
           isOpen={isSearchModalOpen}
           onSelectMember={handleSelectMember}
           closeModal={() => setIsSearchModalOpen(false)}
         />
 
-        <RoutingModal isOpen={isRoutingModalOpen} closeModal={() => setIsRoutingModalOpen(false)} />
-
-
-
+        <RoutingModal
+          isOpen={isRoutingModalOpen}
+          closeModal={() => setIsRoutingModalOpen(false)}
+        />
 
         <div
           className="modal fade"

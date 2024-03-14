@@ -205,6 +205,7 @@ function Dashboard() {
       <RoutingModal
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
+        user={user}
       />
       <PacketDisplayModal
         isOpen={isPacketModalOpen}
