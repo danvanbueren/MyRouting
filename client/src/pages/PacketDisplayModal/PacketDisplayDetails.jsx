@@ -1,10 +1,11 @@
 import { ListGroup, Card, Button } from "react-bootstrap";
 
 const Details = ({ packet, creator, assignee }) => {
+  console.log(packet);
   const handleDownload = (fileId) => {
-    const url = `${import.meta.env.VITE_API}/api/users/${creator}/packets/${
-      packet.id
-    }/files/${fileId}`;
+    const url = `${import.meta.env.VITE_API}/api/users/${
+      packet.creator
+    }/packets/${packet.packetId}/files/${fileId}`;
     window.open(url, "_blank");
   };
 

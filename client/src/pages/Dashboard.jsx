@@ -6,14 +6,14 @@ import axios from "axios";
 import RoutingModal from "../components/RoutingModal";
 import PacketDisplayModal from "../components/PacketDisplayModal";
 import UserPacketTable from "../components/UserPacketTable";
-
 function Dashboard() {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
   const [packets, setPackets] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPacketModalOpen, setIsPacketModalOpen] = useState(false);
-
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedPacket, setSelectedPacket] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     document.title = "Demo myRouting";
@@ -50,6 +50,12 @@ function Dashboard() {
   const handleSelectPacket = async (packet) => {
     setSelectedPacket(packet);
     setIsPacketModalOpen(true);
+  };
+
+  const handleEditPacket = (packet) => {
+    setIsEdit(true);
+    setSelectedPacket(packet);
+    setIsEditModalOpen(true);
   };
 
   const readyForActionPackets = packets.filter(
@@ -101,46 +107,49 @@ function Dashboard() {
           </h6>
         </div>
 
-
         <div className="w-100 pt-3">
           <h3 className="pb-2">
-            Ready for Action 
+            Ready for Action
             <span className="material-symbols-outlined ps-2 align-text-center">
               help
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_pending">
-          <UserPacketTable packets={readyForActionPackets} user={user}/>
+            <UserPacketTable
+              packets={readyForActionPackets}
+              user={user}
+              onEditPacket={handleEditPacket}
+            />
           </div>
         </div>
         <div className="w-100 pt-3">
           <h3 className="pb-2">
-          In Coordination
+            In Coordination
             <span className="material-symbols-outlined ps-2 align-text-center">
               help
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_pending">
-          <UserPacketTable packets={awaitingCoordinationPackets} user={user} />
+            <UserPacketTable
+              packets={awaitingCoordinationPackets}
+              user={user}
+              onEditPacket={handleEditPacket}
+            />
           </div>
         </div>
 
         <div className="w-100 pt-3">
           <h3 className="pb-2">
-          Recently Completed
+            Recently Completed
             <span className="material-symbols-outlined ps-2 align-text-center">
               help
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_pending">
-          <UserPacketTable packets={completedPackets} user={user}/>
+            <UserPacketTable packets={completedPackets} user={user} />
           </div>
         </div>
-
-
-           
-      
-      </div>      
+      </div>
       <div
         className="w-100 pt-3 border-bottom"
         style={{ height: "4rem" }}

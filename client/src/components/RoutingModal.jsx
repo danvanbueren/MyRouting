@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { Modal, Button, Form, InputGroup } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Form, InputGroup, Card } from "react-bootstrap";
 import axios from "axios";
-function RoutingModal({ isOpen, closeModal, user }) {
+function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
+  console.log(packet);
   const [isOtherSelected, setIsOtherSelected] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState("");
   const [summary, setSummary] = useState("");
-  const [selectedFile, setSelectedFile] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
   const [suspenseDate, setSuspenseDate] = useState("");
 
   const handleRadioChange = (e) => {
@@ -28,55 +29,111 @@ function RoutingModal({ isOpen, closeModal, user }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const packetData = {
+    let packetFiles = packet?.files || [];
+    if (selectedFile) {
+      packetFiles.push({
+        name: selectedFile.name,
+        createdAt: new Date().toISOString(),
+        file: selectedFile,
+      });
+    }
+
+    let packetData = {
       name: user.lastName + "_" + selectedType.trim() + "_packet",
       type: selectedType,
       comments: summary,
       currentPhase: 0,
       creator: user.userId,
       createdAt: new Date().toISOString(),
-      files: [
-        {
-          name: selectedFile.name,
-          createdAt: new Date().toISOString(),
-          file: selectedFile,
-        },
-      ],
+      files: packetFiles,
       phases: [
         {
           suspense: suspenseDate,
+          packetId: packet?.packetId || "",
+          packetPhaseId: packet?.phases[0].packetPhaseId || "",
           comments: "",
           stepNumber: 0,
-          completionDate: "",
+          completionDate: null,
           phase: "Review",
           assignee: selectedRecipient.Rater,
+          assigneeRole: selectedRecipient.assigneeRole,
         },
       ],
     };
 
-    // axios
-    //   .post(
-    //     `https://routing.inicolai.com/api/users/${user.userId}/packets`,
-    //     packetData
-    //   )
-    //   .then((response) => {
-    //     console.log(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+    if (!isEdit) {
+      axios
+        .post(
+          `${import.meta.env.VITE_API}/api/users/${user.userId}/packets`,
+          packetData
+        )
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else if (isEdit && packet) {
+      axios
+        .put(
+          `${import.meta.env.VITE_API}/api/users/${user.userId}/packets/${
+            packet.packetId
+          }`,
+          packetData
+        )
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
     console.log(packetData);
     closeModal();
     setSelectedType("");
     setSelectedRecipient("");
     setSummary("");
-    setSelectedFile("");
+    setSelectedFile(null);
   };
+
+  const handleDelete = (packet) => {
+    axios
+      .delete(
+        `${import.meta.env.VITE_API}/api/users/${user.userId}/packets/${
+          packet.packetId
+        }`
+      )
+      .then((response) => {
+        closeModal();
+        setSelectedType("");
+        setSelectedRecipient("");
+        setSummary("");
+        setSelectedFile(null);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    if (isEdit && packet) {
+      setSelectedType(packet.type);
+      setSummary(packet.comments || "");
+      setSelectedFile(packet.files[0] || "");
+      setSuspenseDate(packet.phases[0].suspense || "");
+
+      if (packet.phases[0].assigneeRole === "RATER") {
+        setSelectedRecipient({ Rater: user.rater?.userId });
+      } else {
+        setSelectedRecipient(packet.phases[0].assigneeRole);
+      }
+    }
+  }, [isEdit, packet]);
 
   return (
     <Modal show={isOpen} onHide={closeModal} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Add Routing</Modal.Title>
+        <Modal.Title>{!isEdit ? "Add Routing" : "Edit Packet"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -119,7 +176,9 @@ function RoutingModal({ isOpen, closeModal, user }) {
               name="type"
               id="type3"
               onChange={() =>
-                handleRadioChange({ target: { value: "Command Sponsorship" } })
+                handleRadioChange({
+                  target: { value: "Command Sponsorship" },
+                })
               }
               checked={selectedType === "Command Sponsorship"}
             />
@@ -166,7 +225,10 @@ function RoutingModal({ isOpen, closeModal, user }) {
               name="recipient"
               id="recipient1"
               onChange={() =>
-                setSelectedRecipient({ Rater: user.rater.userId })
+                setSelectedRecipient({
+                  Rater: user.rater.userId,
+                  assigneeRole: "RATER",
+                })
               }
               checked={
                 selectedRecipient &&
@@ -235,7 +297,27 @@ function RoutingModal({ isOpen, closeModal, user }) {
               onChange={(e) => setSuspenseDate(e.target.value)}
             />
           </Form.Group>
-
+          {isEdit &&
+            packet &&
+            packet.files &&
+            packet.files.map((file, index) => (
+              <Card key={index} className="mb-3">
+                <Card.Body>
+                  <Card.Title>
+                    File Name:
+                    <Button
+                      variant="link"
+                      onClick={() => handleDownload(file.fileId)}
+                    >
+                      {file.name}
+                    </Button>
+                  </Card.Title>
+                  <Card.Text>
+                    Created At: {new Date(file.createdAt).toLocaleString()}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            ))}
           <Form.Group className="mb-3">
             <Form.Label>
               <b>Add Documents</b>
@@ -246,10 +328,25 @@ function RoutingModal({ isOpen, closeModal, user }) {
               onChange={(e) => setSelectedFile(e.target.files[0])}
             />
           </Form.Group>
-
-          <Button variant="primary" className="float-end" type="submit">
-            Submit Packet
-          </Button>
+          <div
+            style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
+          >
+            <Button variant="secondary" type="submit">
+              {!isEdit ? "Submit Packet" : "Update Packet"}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                if (
+                  window.confirm("Are you sure you want to delete this packet?")
+                ) {
+                  handleDelete(packet);
+                }
+              }}
+            >
+              Delete Packet
+            </Button>
+          </div>
         </Form>
       </Modal.Body>
     </Modal>
