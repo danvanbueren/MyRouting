@@ -6,7 +6,9 @@ import axios from "axios";
 import RoutingModal from "../components/RoutingModal";
 import PacketDisplayModal from "../components/PacketDisplayModal";
 import UserPacketTable from "../components/UserPacketTable";
-function Dashboard() {
+import ToastMessage from "../components/ToastMessage";
+
+const Dashboard = () => {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
   const [packets, setPackets] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,6 +16,12 @@ function Dashboard() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedPacket, setSelectedPacket] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [displayToast, setDisplayToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState({
+    message: "",
+    color: "primary",
+  });
+  const [refreshPackets, setRefreshPackets] = useState(false);
 
   useEffect(() => {
     document.title = "Demo myRouting";
@@ -45,7 +53,7 @@ function Dashboard() {
       }
     };
     getPackets();
-  }, []);
+  }, [refreshPackets]);
 
   const handleSelectPacket = async (packet) => {
     setSelectedPacket(packet);
@@ -119,6 +127,14 @@ function Dashboard() {
               packets={readyForActionPackets}
               user={user}
               onEditPacket={handleEditPacket}
+              setDisplayToast={setDisplayToast}
+              setToastMessage={setToastMessage}
+              toastMessage={toastMessage}
+              refreshPackets={() =>
+                setRefreshPackets(
+                  (currentRefreshPackets) => !currentRefreshPackets
+                )
+              }
             />
           </div>
         </div>
@@ -134,6 +150,13 @@ function Dashboard() {
               packets={awaitingCoordinationPackets}
               user={user}
               onEditPacket={handleEditPacket}
+              setDisplayToast={setDisplayToast}
+              setToastMessage={setToastMessage}
+              refreshPackets={() =>
+                setRefreshPackets(
+                  (currentRefreshPackets) => !currentRefreshPackets
+                )
+              }
             />
           </div>
         </div>
@@ -146,7 +169,17 @@ function Dashboard() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_pending">
-            <UserPacketTable packets={completedPackets} user={user} />
+            <UserPacketTable
+              packets={completedPackets}
+              user={user}
+              setDisplayToast={setDisplayToast}
+              setToastMessage={setToastMessage}
+              refreshPackets={() =>
+                setRefreshPackets(
+                  (currentRefreshPackets) => !currentRefreshPackets
+                )
+              }
+            />
           </div>
         </div>
       </div>
@@ -158,6 +191,11 @@ function Dashboard() {
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
         user={user}
+        setToastMessage={setToastMessage}
+        setDisplayToast={setDisplayToast}
+        refreshPackets={() =>
+          setRefreshPackets((currentRefreshPackets) => !currentRefreshPackets)
+        }
       />
       <PacketDisplayModal
         isOpen={isPacketModalOpen}
@@ -167,8 +205,22 @@ function Dashboard() {
         }}
         packet={selectedPacket}
       />
+      {displayToast && toastMessage.message && (
+        <ToastMessage
+          toastMessage={toastMessage}
+          closeToast={() => {
+            setDisplayToast(false);
+            setToastMessage({ message: "", color: "primary" });
+          }}
+          setDisplayToast={setDisplayToast}
+          setToastMessage={(message, color) =>
+            setToastMessage({ message, color })
+          }
+          displayToast={displayToast}
+        />
+      )}
     </>
   );
-}
+};
 
 export default Dashboard;
