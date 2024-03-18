@@ -25,10 +25,10 @@ function Admin() {
   };
 
   const filterPackets = (packets) => {
-    const awaitingReview = packets.filter(packet => packet.phases[packet.currentPhase].phase === "REVIEW");
-    const awaitingSignature = packets.filter(packet => packet.phases[packet.currentPhase].phase === "SIGNATURE");
-    const submittedAFPC = packets.filter(packet => packet.phases[packet.currentPhase].phase === "AFPC");
-    const recentlyCompleted = packets.filter(packet => packet.phases[packet.currentPhase].phase === "COMPLETED");
+    const awaitingReview = packets.filter(packet => packet.phases[packet.currentPhase].phase.toLowerCase() === "review");
+    const awaitingSignature = packets.filter(packet => packet.phases[packet.currentPhase].phase.toLowerCase() === "signature");
+    const submittedAFPC = packets.filter(packet => packet.phases[packet.currentPhase].phase.toLowerCase() === "afpc");
+    const recentlyCompleted = packets.filter(packet => packet.phases[packet.currentPhase].phase.toLowerCase() === "completed");
 
     setAwaitingReview(awaitingReview);
     setAwaitingSignature(awaitingSignature);
