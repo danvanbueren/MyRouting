@@ -207,7 +207,7 @@ function Admin() {
         <RoutingModal
           isOpen={isRoutingModalOpen}
           closeModal={() => setIsRoutingModalOpen(false)}
-          user={user}
+          user={selectedMember}
           setToastMessage={setToastMessage}
           setDisplayToast={setDisplayToast}
           refreshPackets={() =>
