@@ -395,14 +395,7 @@ const RoutingModal = ({
               checked={selectedAction === "Note"}
             />
 
-            <Form.Check
-              type="radio"
-              label="AFPC"
-              name="action"
-              id="action5"
-              onChange={() => setSelectedAction("AFPC")}
-              checked={selectedAction === "AFPC"}
-            />
+         
             <div className="border-bottom my-3"></div>
           </Form.Group>
 
