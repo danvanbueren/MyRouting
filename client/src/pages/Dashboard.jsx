@@ -82,9 +82,12 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="container-fluid p-0" style={{ width: "79%" }}>
+      <div
+        className="container-fluid p-0"
+        style={{ width: "100%", maxWidth: "900px" }}
+      >
         <div className="w-100 border-bottom">
-          <div className="d-flex justify-content-between align-items-end">
+          <div className="d-flex flex-column flex-md-row justify-content-between align-items-end">
             <h3 className="pb-2">myRouting Dashboard</h3>
             <div className="align-text-bottom">
               <button
@@ -103,7 +106,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="pt-4 d-flex align-items-center">
+        <div className="pt-4 d-flex flex-column flex-md-row align-items-center">
           <img
             src={UserLogo}
             alt="Logo"

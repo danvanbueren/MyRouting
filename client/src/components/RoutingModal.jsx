@@ -40,35 +40,35 @@ const RoutingModal = ({
     e.preventDefault();
 
     let packetData = new FormData();
-    packetData.append(
-      "name",
-      user.lastName + "_" + selectedType.trim() + "_packet"
-    );
-    packetData.append("type", selectedType);
-    packetData.append("comments", summary);
-    packetData.append("currentPhase", 0);
-    packetData.append("creator", user.userId);
-    packetData.append("createdAt", new Date().toISOString());
-    packetData.append(
-      "phases",
-      JSON.stringify([
+
+    let data = {
+      name: user.lastName + "_" + selectedType.trim() + "_packet",
+      type: selectedType,
+      comments: summary,
+      currentPhase: 0,
+      creator: user.userId,
+      createdAt: new Date().toISOString(),
+      phases: [
         {
-          suspense: suspenseDate,
+          suspense: suspenseDate || "",
           packetId: packet?.packetId || "",
           packetPhaseId: packet?.phases[0].packetPhaseId || "",
           comments: "",
           stepNumber: 0,
           completionDate: null,
           phase: "Review",
-          assignee: selectedRecipient.Rater,
-          assigneeRole: selectedRecipient.assigneeRole,
+          assignee: selectedRecipient.Rater || "",
+          assigneeRole: selectedRecipient.assigneeRole || "",
         },
-      ])
-    );
+      ],
+    };
+
+    packetData.append("data", JSON.stringify(data));
 
     if (selectedFile) {
       for (let i = 0; i < selectedFile.length; i++) {
-        packetData.append(`files[${i}]`, selectedFile[i]);
+        packetData.append(`files`, selectedFile[i]);
+        console.log(selectedFile[i]);
       }
     }
 

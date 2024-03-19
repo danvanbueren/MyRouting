@@ -77,7 +77,7 @@ const UserPacketTable = ({
                 >
                   Edit
                 </Button>
-                <Button variant="secondary" size="sm w-25" disabled>
+                <Button variant="secondary" size="sm w-30" disabled>
                   Reassign
                 </Button>
               </td>
