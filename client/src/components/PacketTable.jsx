@@ -56,7 +56,7 @@ function PacketTable({ packets, sectionName }) {
                   packet?.phases[packet?.currentPhase]?.assigneeUser.lastName
                     ? `Awaiting ${packet.phases[
                         packet.currentPhase
-                      ].phase.toLowerCase()} by ${
+                      ].phase.toUpperCase()} by ${
                         packet.phases[packet.currentPhase].assigneeUser.rank
                       } ${
                         packet.phases[packet.currentPhase].assigneeUser
