@@ -15,6 +15,7 @@ const RoutingModal = ({
 }) => {
   const [isOtherSelected, setIsOtherSelected] = useState(false);
   const [selectedType, setSelectedType] = useState("");
+  const [selectedAction, setSelectedAction] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState("");
   const [summary, setSummary] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -56,7 +57,7 @@ const RoutingModal = ({
           comments: "",
           stepNumber: 0,
           completionDate: null,
-          phase: "Review",
+          phase: selectedAction,
           assignee: selectedRecipient.Rater || "",
           assigneeRole: selectedRecipient.assigneeRole || "",
         },
@@ -314,6 +315,61 @@ const RoutingModal = ({
               id="recipient5"
               onChange={() => setSelectedRecipient("AFPC")}
               checked={selectedRecipient === "AFPC"}
+            />
+            <div className="border-bottom my-3"></div>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <b>Select Action</b>
+            </Form.Label>
+            <Form.Check
+              type="radio"
+              label="Review"
+              name="action"
+              id="action1"
+              onChange={() =>
+                setSelectedAction("Review")
+              }
+              checked={
+                selectedAction =="Review"
+              }
+            />
+
+            <Form.Check
+              type="radio"
+              label="Concur"
+              name="action"
+              id="action2"
+              onChange={() => setSelectedAction("Concur")}
+              checked={selectedAction === "Concur"}
+            />
+
+            <Form.Check
+              type="radio"
+              label="Signature"
+              name="action"
+              id="action3"
+              onChange={() => setSelectedAction("Signature")}
+              checked={selectedAction === "Signature"}
+            />
+
+            <Form.Check
+              type="radio"
+              label="Note"
+              name="action"
+              id="action4"
+              onChange={() => setSelectedAction("Note")}
+              checked={selectedAction === "Note"}
+            />
+
+          
+<Form.Check
+              type="radio"
+              label="AFPC"
+              name="action"
+              id="action5"
+              onChange={() => setSelectedAction("AFPC")}
+              checked={selectedAction === "AFPC"}
             />
             <div className="border-bottom my-3"></div>
           </Form.Group>

@@ -33,7 +33,7 @@ function Admin() {
   const filterPackets = (packets) => {
     const awaitingReview = packets.filter(
       (packet) =>
-        packet.phases[packet.currentPhase].phase.toLowerCase() === "review"
+        packet.phases[packet.currentPhase].phase.toLowerCase() === "review" || packet.phases[packet.currentPhase].phase.toLowerCase() === "concur"
     );
     const awaitingSignature = packets.filter(
       (packet) =>
