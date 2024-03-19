@@ -123,18 +123,25 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
     <Table>
       <TableHeader />
       <tbody>
-        {searchResults.map((member, index) => (
-          <TableRow
-            key={index}
-            member={member}
-            setSelectedMember={setSelectedMember}
-            selectedMember={selectedMember}
-          />
-        ))}
+        {searchResults.length > 0 ? (
+          searchResults.map((member, index) => (
+            <TableRow
+              key={index}
+              member={member}
+              setSelectedMember={setSelectedMember}
+              selectedMember={selectedMember}
+            />
+          ))
+        ) : (
+          <tr>
+            <td colSpan="5" style={{ textAlign: "center" }}>
+              No users found
+            </td>
+          </tr>
+        )}
       </tbody>
     </Table>
   );
-
   return (
     <Modal
       show={isOpen}
