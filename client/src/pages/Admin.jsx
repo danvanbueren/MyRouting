@@ -6,7 +6,7 @@ import axios from "axios";
 import SearchMemberModal from "../components/SearchMemberModal";
 import RoutingModal from "../components/RoutingModal";
 import PacketTable from "../components/PacketTable";
-
+import ToastMessage from "../components/ToastMessage";
 function Admin() {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -16,7 +16,13 @@ function Admin() {
   const [submittedAFPC, setSubmittedAFPC] = useState([]);
   const [recentlyCompleted, setRecentlyCompleted] = useState([]);
   const [selectedMember, setSelectedMember] = useState(null);
-
+  const [error, setError] = useState(null);
+  const [refreshPackets, setRefreshPackets] = useState(false);
+  const [displayToast, setDisplayToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState({
+    message: "",
+    color: "primary",
+  });
   // Function to be passed to the modal
   const handleSelectMember = (member) => {
     setSelectedMember(member);
@@ -25,10 +31,22 @@ function Admin() {
   };
 
   const filterPackets = (packets) => {
-    const awaitingReview = packets.filter(packet => packet.phases[packet.currentPhase].phase.toLowerCase() === "review");
-    const awaitingSignature = packets.filter(packet => packet.phases[packet.currentPhase].phase.toLowerCase() === "signature");
-    const submittedAFPC = packets.filter(packet => packet.phases[packet.currentPhase].phase.toLowerCase() === "afpc");
-    const recentlyCompleted = packets.filter(packet => packet.phases[packet.currentPhase].phase.toLowerCase() === "completed");
+    const awaitingReview = packets.filter(
+      (packet) =>
+        packet.phases[packet.currentPhase].phase.toLowerCase() === "review"
+    );
+    const awaitingSignature = packets.filter(
+      (packet) =>
+        packet.phases[packet.currentPhase].phase.toLowerCase() === "signature"
+    );
+    const submittedAFPC = packets.filter(
+      (packet) =>
+        packet.phases[packet.currentPhase].phase.toLowerCase() === "afpc"
+    );
+    const recentlyCompleted = packets.filter(
+      (packet) =>
+        packet.phases[packet.currentPhase].phase.toLowerCase() === "completed"
+    );
 
     setAwaitingReview(awaitingReview);
     setAwaitingSignature(awaitingSignature);
@@ -49,6 +67,7 @@ function Admin() {
         setUser(response.data);
       } catch (error) {
         console.error("Get user failed:", error);
+        setError("Failed to get user data.");
       }
     };
 
@@ -61,17 +80,19 @@ function Admin() {
         );
         filterPackets(response.data);
       } catch (error) {
-        console.error("Get user failed:", error);
+        console.error("Get packets failed:", error);
+        setError("Failed to get packets data.");
       }
     };
-    getPackets()
-
-
+    getPackets();
   }, []);
 
-
   return (
-    <div className="container-fluid p-0" style={{ width: "79%" }}>
+    <>
+      <div className="container-fluid p-0" style={{ width: "79%" }}>
+        {error && <div className="alert alert-danger">{error}</div>}
+      </div>
+      <div className="container-fluid p-0" style={{ width: "79%" }}>
         <div className="w-100 border-bottom">
           <div className="d-flex justify-content-between align-items-end">
             <h3 className="pb-2">myRouting Admin Dashboard</h3>
@@ -121,7 +142,10 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_pending">
-            <PacketTable packets={awaitingReview} sectionName={"PendingAction"} />
+            <PacketTable
+              packets={awaitingReview}
+              sectionName={"PendingAction"}
+            />
           </div>
         </div>
         <div className="w-100 pt-3">
@@ -132,7 +156,10 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_signature">
-            <PacketTable packets={awaitingSignature} sectionName={"awaitingSignature"} />
+            <PacketTable
+              packets={awaitingSignature}
+              sectionName={"awaitingSignature"}
+            />
           </div>
         </div>
 
@@ -144,7 +171,10 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_afpc">
-            <PacketTable packets={submittedAFPC} sectionName={"submittedAFPC"} />
+            <PacketTable
+              packets={submittedAFPC}
+              sectionName={"submittedAFPC"}
+            />
           </div>
         </div>
 
@@ -156,7 +186,10 @@ function Admin() {
             </span>
           </h3>
           <div className="border p-3 row" id="element_table_completed">
-            <PacketTable packets={recentlyCompleted} sectionName={"recentlyCompleted"} />
+            <PacketTable
+              packets={recentlyCompleted}
+              sectionName={"recentlyCompleted"}
+            />
           </div>
         </div>
 
@@ -174,8 +207,27 @@ function Admin() {
         <RoutingModal
           isOpen={isRoutingModalOpen}
           closeModal={() => setIsRoutingModalOpen(false)}
+          user={user}
+          setToastMessage={setToastMessage}
+          setDisplayToast={setDisplayToast}
+          refreshPackets={() =>
+            setRefreshPackets((currentRefreshPackets) => !currentRefreshPackets)
+          }
         />
-
+        {displayToast && toastMessage.message && (
+          <ToastMessage
+            toastMessage={toastMessage}
+            closeToast={() => {
+              setDisplayToast(false);
+              setToastMessage({ message: "", color: "primary" });
+            }}
+            setDisplayToast={setDisplayToast}
+            setToastMessage={(message, color) =>
+              setToastMessage({ message, color })
+            }
+            displayToast={displayToast}
+          />
+        )}
         <div
           className="modal fade"
           id="view-packet-modal"
@@ -189,6 +241,7 @@ function Admin() {
           </div>
         </div>
       </div>
+    </>
   );
 }
 

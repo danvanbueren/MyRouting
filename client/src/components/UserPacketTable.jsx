@@ -4,7 +4,14 @@ import { useState, useEffect } from "react";
 import RoutingModal from "../components/RoutingModal";
 import PacketDisplayModal from "./PacketDisplayModal";
 
-function UserPacketTable({ packets, user, onEditPacket }) {
+const UserPacketTable = ({
+  packets,
+  user,
+  onEditPacket,
+  setDisplayToast,
+  setToastMessage,
+  refreshPackets,
+}) => {
   const [selectedPacket, setSelectedPacket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -70,7 +77,7 @@ function UserPacketTable({ packets, user, onEditPacket }) {
                 >
                   Edit
                 </Button>
-                <Button variant="secondary" size="sm w-25" disabled>
+                <Button variant="secondary" size="sm w-30" disabled>
                   Reassign
                 </Button>
               </td>
@@ -88,6 +95,9 @@ function UserPacketTable({ packets, user, onEditPacket }) {
         packet={selectedPacket}
         user={user}
         isEdit={true}
+        setToastMessage={setToastMessage}
+        setDisplayToast={setDisplayToast}
+        refreshPackets={refreshPackets}
       />
       <PacketDisplayModal
         isOpen={isModalOpen}
@@ -99,6 +109,6 @@ function UserPacketTable({ packets, user, onEditPacket }) {
       />
     </>
   );
-}
+};
 
 export default UserPacketTable;

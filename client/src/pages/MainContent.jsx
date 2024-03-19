@@ -6,8 +6,6 @@ import AppIcon from "../assets/img/app_icon.jpg";
 import OtherAppIcon from "../assets/img/other_app_icon.jpg";
 import "../css/landing.css";
 
-
-
 const appSections = [
   {
     title: "LEARN MORE ABOUT...",
@@ -122,11 +120,11 @@ const appSections = [
 
 const fetchUser = async (setUser) => {
   try {
-
-    const response = await axios.get(   `${
-      import.meta.env.VITE_API
-    }/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`
-  );
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_API
+      }/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`
+    );
     setUser(response.data);
   } catch (error) {
     console.error("Get user failed:", error);
@@ -134,7 +132,7 @@ const fetchUser = async (setUser) => {
 };
 
 const AppSection = ({ section }) => (
-  <div className="col-2 image-container btn p-3">
+  <div className="col-12 col-sm-6 col-md-4 col-lg-3 image-container btn p-3">
     <a href={section.url} style={{ textDecoration: "none" }}>
       <img
         src={section.image}
@@ -156,24 +154,28 @@ const MainPageContent = () => {
   useEffect(() => {
     fetchUser(setUser);
   }, []);
-
   return (
-    <div className="container-fluid px-3">
+    <div className="container-fluid p-0">
       <div style={{ backgroundColor: "#1d2947" }}>
         <div className="image-container">
           <img src={CoverCrop} style={{ width: "100%" }} alt="" />
           <div className="centered">
             <div className="d-flex justify-content-center">
-              <div className="text-wrap text-center" style={{ width: "25rem" }}>
-                <h1 style={{ color: "white", padding: "9rem 0 9rem 0" }}>
-                  WELCOME TO myFSS, {user.rank} {user.firstName} {user.lastName}
-                </h1>
+              <div
+                className="text-wrap text-center"
+                style={{ width: "100%", maxWidth: "25rem" }}
+              >
+                <div
+                  style={{
+                    padding: "1rem",
+                  }}
+                >
+                  <h1 className="px-3 user-name">WELCOME TO myFSS</h1>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        <h2 className="px-4 pt-4 text-white m-0">AVAILABLE NOW</h2>
 
         <div className="row p-4">
           {appSections.map((section, index) => (

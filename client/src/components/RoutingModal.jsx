@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, InputGroup, Card } from "react-bootstrap";
 import axios from "axios";
-function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
-  console.log(packet);
+
+const RoutingModal = ({
+  isOpen,
+  closeModal,
+  user,
+  isEdit,
+  packet,
+  setToastMessage,
+  setDisplayToast,
+  toastMessage,
+  refreshPackets,
+}) => {
   const [isOtherSelected, setIsOtherSelected] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState("");
@@ -29,37 +39,38 @@ function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    let packetFiles = packet?.files || [];
-    if (selectedFile) {
-      packetFiles.push({
-        name: selectedFile.name,
-        createdAt: new Date().toISOString(),
-        file: selectedFile,
-      });
-    }
+    let packetData = new FormData();
 
-    let packetData = {
+    let data = {
       name: user.lastName + "_" + selectedType.trim() + "_packet",
       type: selectedType,
       comments: summary,
       currentPhase: 0,
       creator: user.userId,
       createdAt: new Date().toISOString(),
-      files: packetFiles,
       phases: [
         {
-          suspense: suspenseDate,
+          suspense: suspenseDate || "",
           packetId: packet?.packetId || "",
           packetPhaseId: packet?.phases[0].packetPhaseId || "",
           comments: "",
           stepNumber: 0,
           completionDate: null,
           phase: "Review",
-          assignee: selectedRecipient.Rater,
-          assigneeRole: selectedRecipient.assigneeRole,
+          assignee: selectedRecipient.Rater || "",
+          assigneeRole: selectedRecipient.assigneeRole || "",
         },
       ],
     };
+
+    packetData.append("data", JSON.stringify(data));
+
+    if (selectedFile) {
+      for (let i = 0; i < selectedFile.length; i++) {
+        packetData.append(`files`, selectedFile[i]);
+        console.log(selectedFile[i]);
+      }
+    }
 
     if (!isEdit) {
       axios
@@ -69,10 +80,19 @@ function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
         )
         .then((response) => {
           console.log(response.data);
+          setToastMessage({
+            message: "Successfully created packet",
+            color: "success-subtle",
+          });
         })
         .catch((error) => {
+          setToastMessage({
+            message: "Error creating packet, try again later",
+            color: "danger",
+          });
           console.error(error);
         });
+      console.log(packetData);
     } else if (isEdit && packet) {
       axios
         .put(
@@ -83,17 +103,27 @@ function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
         )
         .then((response) => {
           console.log(response.data);
+          setToastMessage({
+            message: "Successfully edited packet",
+            color: "success-subtle",
+          });
         })
         .catch((error) => {
+          setToastMessage({
+            message: "Error editing packet, try again later",
+            color: "danger",
+          });
+
           console.error(error);
         });
     }
-    console.log(packetData);
+
     closeModal();
     setSelectedType("");
     setSelectedRecipient("");
     setSummary("");
     setSelectedFile(null);
+    refreshPackets();
   };
 
   const handleDelete = (packet) => {
@@ -105,15 +135,29 @@ function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
       )
       .then((response) => {
         closeModal();
+        setToastMessage({
+          message: "Successfully deleted packet",
+          color: "success-subtle",
+        });
+
         setSelectedType("");
         setSelectedRecipient("");
         setSummary("");
         setSelectedFile(null);
+        refreshPackets();
       })
       .catch((error) => {
+        setToastMessage({
+          message: "Error deleting packet, try again later",
+          color: "danger",
+        });
         console.error(error);
       });
   };
+  useEffect(() => {
+    refreshPackets();
+    setDisplayToast(true);
+  }, [toastMessage]);
 
   useEffect(() => {
     if (isEdit && packet) {
@@ -213,7 +257,7 @@ function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
               />
             </InputGroup>
           </Form.Group>
-          <div class="border-bottom my-3"></div>
+          <div className="border-bottom my-3"></div>
 
           <Form.Group className="mb-3">
             <Form.Label>
@@ -271,7 +315,7 @@ function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
               onChange={() => setSelectedRecipient("AFPC")}
               checked={selectedRecipient === "AFPC"}
             />
-            <div class="border-bottom my-3"></div>
+            <div className="border-bottom my-3"></div>
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -285,7 +329,7 @@ function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
               onChange={(e) => setSummary(e.target.value)}
             />
           </Form.Group>
-          <div class="border-bottom my-3"></div>
+          <div className="border-bottom my-3"></div>
 
           <Form.Group className="mb-3">
             <Form.Label>
@@ -325,7 +369,8 @@ function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
             <Form.Control
               type="file"
               accept=".pdf"
-              onChange={(e) => setSelectedFile(e.target.files[0])}
+              multiple
+              onChange={(e) => setSelectedFile(e.target.files)}
             />
           </Form.Group>
           <div
@@ -334,23 +379,27 @@ function RoutingModal({ isOpen, closeModal, user, isEdit, packet }) {
             <Button variant="secondary" type="submit">
               {!isEdit ? "Submit Packet" : "Update Packet"}
             </Button>
-            <Button
-              variant="danger"
-              onClick={() => {
-                if (
-                  window.confirm("Are you sure you want to delete this packet?")
-                ) {
-                  handleDelete(packet);
-                }
-              }}
-            >
-              Delete Packet
-            </Button>
+            {isEdit && (
+              <Button
+                variant="danger"
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      "Are you sure you want to delete this packet?"
+                    )
+                  ) {
+                    handleDelete(packet);
+                  }
+                }}
+              >
+                Delete Packet
+              </Button>
+            )}
           </div>
         </Form>
       </Modal.Body>
     </Modal>
   );
-}
+};
 
 export default RoutingModal;
