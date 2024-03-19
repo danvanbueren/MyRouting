@@ -1,7 +1,25 @@
 import { ListGroup, Card, Button } from "react-bootstrap";
+import { getUser } from "../../utils/user";
+import { useState, useEffect } from "react";
+const Details = ({ packet, creator }) => {
+  const [users, setUsers] = useState({});
 
-const Details = ({ packet, creator, assignee }) => {
-  console.log(packet);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const newUsers = { ...users };
+
+      for (const phase of packet.phases) {
+        if (!newUsers[phase.assignee]) {
+          newUsers[phase.assignee] = await getUser(String(phase.assignee));
+        }
+      }
+
+      setUsers(newUsers);
+    };
+
+    fetchUsers();
+  }, [packet]);
+
   const handleDownload = (fileId) => {
     const url = `${import.meta.env.VITE_API}/api/users/${
       packet.creator
@@ -37,7 +55,9 @@ const Details = ({ packet, creator, assignee }) => {
                   <Card.Title>Phase: {phase.phase}</Card.Title>
                   <Card.Text>Suspense: {phase.suspense}</Card.Text>
                   <Card.Text>Step Number: {phase.stepNumber}</Card.Text>
-                  <Card.Text>Assignee: {assignee || "N/A"}</Card.Text>
+                  <Card.Text>
+                    Assignee: {users[phase.assignee] || "N/A"}
+                  </Card.Text>
                   <Card.Text>
                     Comments: {phase.comments || "No comments"}
                   </Card.Text>

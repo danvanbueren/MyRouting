@@ -297,7 +297,8 @@ const RoutingModal = ({
                 })
               }
               checked={
-                selectedRecipient && selectedRecipient.assigneeRole === "RATER"
+                selectedRecipient &&
+                selectedRecipient.assigneeRole.toUpperCase() === "RATER"
               }
             />
 
@@ -313,7 +314,8 @@ const RoutingModal = ({
                 })
               }
               checked={
-                selectedRecipient && selectedRecipient.assigneeRole === "CSS"
+                selectedRecipient &&
+                selectedRecipient.assigneeRole.toUpperCase() === "CSS"
               }
             />
 
@@ -347,7 +349,8 @@ const RoutingModal = ({
                 })
               }
               checked={
-                selectedRecipient && selectedRecipient.assigneeRole === "AFPC"
+                selectedRecipient &&
+                selectedRecipient.assigneeRole.toUpperCase() === "AFPC"
               }
             />
             <div className="border-bottom my-3"></div>
