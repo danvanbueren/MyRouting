@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form, InputGroup, Card } from "react-bootstrap";
+import { Modal, Button, Form, InputGroup, Card, FormControl } from "react-bootstrap";
 import axios from "axios";
+import SearchMemberModal from "./SearchMemberModal";
 
 const RoutingModal = ({
   isOpen,
@@ -13,6 +14,8 @@ const RoutingModal = ({
   toastMessage,
   refreshPackets,
 }) => {
+  const [showSearchMemberModal, setShowSearchMemberModal] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
   const [isOtherSelected, setIsOtherSelected] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
@@ -20,6 +23,7 @@ const RoutingModal = ({
   const [summary, setSummary] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [suspenseDate, setSuspenseDate] = useState("");
+  const [closeOutDate, setCloseOutDate] = useState("");
 
   const AFPC = {
     userId: "1c40ad46-e5f7-11ee-b57a-e39ea2c18650",
@@ -34,6 +38,17 @@ const RoutingModal = ({
     lastName: "",
     rank: "",
   };
+
+  const onSelectMember = (member) => {
+    setSelectedMember(member);
+    setShowSearchMemberModal(false);
+    setSelectedRecipient({
+      assignee: member.userId,
+      assigneeRole: "MEMBER",
+    });
+  };
+
+   
 
   const handleRadioChange = (e) => {
     if (e.target.value === "Other") {
@@ -66,6 +81,7 @@ const RoutingModal = ({
       phases: [
         {
           suspense: suspenseDate || "",
+          closeOutDate: closeOutDate || "",
           packetId: packet?.packetId || "",
           packetPhaseId: packet?.phases[0].packetPhaseId || "",
           comments: "",
@@ -197,6 +213,7 @@ const RoutingModal = ({
   }, [isEdit, packet]);
 
   return (
+    <>
     <Modal show={isOpen} onHide={closeModal} centered>
       <Modal.Header closeButton>
         <Modal.Title>{!isEdit ? "Add Routing" : "Edit Packet"}</Modal.Title>
@@ -290,11 +307,15 @@ const RoutingModal = ({
               label="Rater"
               name="recipient"
               id="recipient1"
-              onChange={() =>
+              onChange={() =>{
                 setSelectedRecipient({
                   assignee: user.rater.userId,
                   assigneeRole: "RATER",
                 })
+                setSelectedMember(null); // Reset the selected member
+              }
+              
+
               }
               checked={
                 selectedRecipient &&
@@ -307,11 +328,15 @@ const RoutingModal = ({
               label="CSS"
               name="recipient"
               id="recipient2"
-              onChange={() =>
+              onChange={() =>{
                 setSelectedRecipient({
                   assignee: CSS.userId,
                   assigneeRole: "CSS",
                 })
+                setSelectedMember(null); // Reset the selected member
+
+              }
+              
               }
               checked={
                 selectedRecipient &&
@@ -324,35 +349,30 @@ const RoutingModal = ({
               label="Commander"
               name="recipient"
               id="recipient3"
-              onChange={() => setSelectedRecipient("Commander")}
+              onChange={() => {
+
+                setSelectedRecipient("Commander")
+                setSelectedMember(null); // Reset the selected member
+
+              }
+              }
+              
+
               checked={selectedRecipient === "Commander"}
             />
 
-            <Form.Check
-              type="radio"
-              label="MPF"
-              name="recipient"
-              id="recipient4"
-              onChange={() => setSelectedRecipient("MPF")}
-              checked={selectedRecipient === "MPF"}
-            />
+<InputGroup className="mb-3">
+                <InputGroup.Text>Member</InputGroup.Text>
+                <FormControl
+                  readOnly
+                  placeholder="Click to select member"
+                  value={selectedMember ? `${selectedMember.rank} ${selectedMember.firstName} ${selectedMember.lastName}` : ""}
+                  onClick={() => setShowSearchMemberModal(true)}
+                />
+              </InputGroup>
+              
 
-            <Form.Check
-              type="radio"
-              label="AFPC"
-              name="recipient"
-              id="recipient5"
-              onChange={() =>
-                setSelectedRecipient({
-                  assignee: AFPC.userId,
-                  assigneeRole: "AFPC",
-                })
-              }
-              checked={
-                selectedRecipient &&
-                selectedRecipient.assigneeRole.toUpperCase() === "AFPC"
-              }
-            />
+          
             <div className="border-bottom my-3"></div>
           </Form.Group>
           <Form.Group className="mb-3">
@@ -422,6 +442,17 @@ const RoutingModal = ({
               onChange={(e) => setSuspenseDate(e.target.value)}
             />
           </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <b>Close Out Date</b>
+            </Form.Label>
+            <Form.Control
+              type="date"
+              value={closeOutDate}
+              onChange={(e) => setCloseOutDate(e.target.value)}
+            />
+          </Form.Group>
           {isEdit &&
             packet &&
             packet.files &&
@@ -480,6 +511,12 @@ const RoutingModal = ({
         </Form>
       </Modal.Body>
     </Modal>
+       <SearchMemberModal
+       isOpen={showSearchMemberModal}
+       closeModal={() => setShowSearchMemberModal(false)}
+       onSelectMember={onSelectMember}
+     />
+    </>
   );
 };
 
