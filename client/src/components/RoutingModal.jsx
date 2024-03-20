@@ -15,10 +15,25 @@ const RoutingModal = ({
 }) => {
   const [isOtherSelected, setIsOtherSelected] = useState(false);
   const [selectedType, setSelectedType] = useState("");
+  const [selectedAction, setSelectedAction] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState("");
   const [summary, setSummary] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [suspenseDate, setSuspenseDate] = useState("");
+
+  const AFPC = {
+    userId: "1c40ad46-e5f7-11ee-b57a-e39ea2c18650",
+    firstName: "AFPC",
+    lastName: "",
+    rank: "",
+  };
+
+  const CSS = {
+    userId: "a8fa1132-e5f7-11ee-b57b-fb433a5600af",
+    firstName: "CSS",
+    lastName: "",
+    rank: "",
+  };
 
   const handleRadioChange = (e) => {
     if (e.target.value === "Other") {
@@ -56,8 +71,8 @@ const RoutingModal = ({
           comments: "",
           stepNumber: 0,
           completionDate: null,
-          phase: "Review",
-          assignee: selectedRecipient.Rater || "",
+          phase: selectedAction,
+          assignee: selectedRecipient.assignee || "",
           assigneeRole: selectedRecipient.assigneeRole || "",
         },
       ],
@@ -71,7 +86,7 @@ const RoutingModal = ({
         console.log(selectedFile[i]);
       }
     }
-
+    console.log(packetData);
     if (!isEdit) {
       axios
         .post(
@@ -167,7 +182,14 @@ const RoutingModal = ({
       setSuspenseDate(packet.phases[0].suspense || "");
 
       if (packet.phases[0].assigneeRole === "RATER") {
-        setSelectedRecipient({ Rater: user.rater?.userId });
+        setSelectedRecipient({
+          assignee: user.rater?.userId,
+          assigneeRole: "RATER",
+        });
+      } else if (packet.phases[0].assigneeRole === "CSS") {
+        setSelectedRecipient({ assignee: CSS.userId, assigneeRole: "CSS" });
+      } else if (packet.phases[0].assigneeRole === "AFPC") {
+        setSelectedRecipient({ assignee: AFPC.userId, assigneeRole: "AFPC" });
       } else {
         setSelectedRecipient(packet.phases[0].assigneeRole);
       }
@@ -270,13 +292,13 @@ const RoutingModal = ({
               id="recipient1"
               onChange={() =>
                 setSelectedRecipient({
-                  Rater: user.rater.userId,
+                  assignee: user.rater.userId,
                   assigneeRole: "RATER",
                 })
               }
               checked={
                 selectedRecipient &&
-                selectedRecipient.Rater === user.rater.userId
+                selectedRecipient.assigneeRole.toUpperCase() === "RATER"
               }
             />
 
@@ -285,8 +307,16 @@ const RoutingModal = ({
               label="CSS"
               name="recipient"
               id="recipient2"
-              onChange={() => setSelectedRecipient("CSS")}
-              checked={selectedRecipient === "CSS"}
+              onChange={() =>
+                setSelectedRecipient({
+                  assignee: CSS.userId,
+                  assigneeRole: "CSS",
+                })
+              }
+              checked={
+                selectedRecipient &&
+                selectedRecipient.assigneeRole.toUpperCase() === "CSS"
+              }
             />
 
             <Form.Check
@@ -312,9 +342,60 @@ const RoutingModal = ({
               label="AFPC"
               name="recipient"
               id="recipient5"
-              onChange={() => setSelectedRecipient("AFPC")}
-              checked={selectedRecipient === "AFPC"}
+              onChange={() =>
+                setSelectedRecipient({
+                  assignee: AFPC.userId,
+                  assigneeRole: "AFPC",
+                })
+              }
+              checked={
+                selectedRecipient &&
+                selectedRecipient.assigneeRole.toUpperCase() === "AFPC"
+              }
             />
+            <div className="border-bottom my-3"></div>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>
+              <b>Select Action</b>
+            </Form.Label>
+            <Form.Check
+              type="radio"
+              label="Review"
+              name="action"
+              id="action1"
+              onChange={() => setSelectedAction("Review")}
+              checked={selectedAction == "Review"}
+            />
+
+            <Form.Check
+              type="radio"
+              label="Concur"
+              name="action"
+              id="action2"
+              onChange={() => setSelectedAction("Concur")}
+              checked={selectedAction === "Concur"}
+            />
+
+            <Form.Check
+              type="radio"
+              label="Signature"
+              name="action"
+              id="action3"
+              onChange={() => setSelectedAction("Signature")}
+              checked={selectedAction === "Signature"}
+            />
+
+            <Form.Check
+              type="radio"
+              label="Note"
+              name="action"
+              id="action4"
+              onChange={() => setSelectedAction("Note")}
+              checked={selectedAction === "Note"}
+            />
+
+         
             <div className="border-bottom my-3"></div>
           </Form.Group>
 

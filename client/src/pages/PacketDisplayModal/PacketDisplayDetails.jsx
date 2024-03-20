@@ -1,5 +1,6 @@
 import { ListGroup, Card, Button } from "react-bootstrap";
 
+
 const Details = ({ packet, creator, assignee }) => {
   const handleDownload = (fileId) => {
     const url = `${import.meta.env.VITE_API}/api/users/${
@@ -36,7 +37,14 @@ const Details = ({ packet, creator, assignee }) => {
                   <Card.Title>Phase: {phase.phase}</Card.Title>
                   <Card.Text>Suspense: {phase.suspense}</Card.Text>
                   <Card.Text>Step Number: {phase.stepNumber}</Card.Text>
-                  <Card.Text>Assignee: {assignee || "N/A"}</Card.Text>
+                  <Card.Text>
+                    Assignee:{" "}
+                    {phase.assigneeUser.rank +
+                      " " +
+                      phase.assigneeUser.firstName +
+                      " " +
+                      phase.assigneeUser.lastName || "N/A"}
+                  </Card.Text>
                   <Card.Text>
                     Comments: {phase.comments || "No comments"}
                   </Card.Text>

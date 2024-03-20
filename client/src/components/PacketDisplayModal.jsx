@@ -33,14 +33,10 @@ const PacketDisplayModal = ({ isOpen, closeModal, packet }) => {
           </Nav>
           <Tab.Content>
             <Tab.Pane eventKey="status">
-              <PacketDisplayStatus packet={packet} assignee={assignee} />
+              <PacketDisplayStatus packet={packet} />
             </Tab.Pane>
             <Tab.Pane eventKey="details">
-              <PacketDisplayDetails
-                packet={packet}
-                creator={creator}
-                assignee={assignee}
-              />
+              <PacketDisplayDetails packet={packet} creator={creator} />
             </Tab.Pane>
           </Tab.Content>
         </Tab.Container>

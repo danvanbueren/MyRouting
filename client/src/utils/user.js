@@ -5,6 +5,7 @@ export const getUser = async (userId) => {
     const response = await axios.get(
       `${import.meta.env.VITE_API}/api/users/${userId}`
     );
+
     return (
       response.data.rank +
       " " +

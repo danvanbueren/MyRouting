@@ -51,19 +51,23 @@ function PacketTable({ packets, sectionName }) {
                 <p>
                   {packet?.phases[packet?.currentPhase]?.phase &&
                   packet?.phases[packet?.currentPhase]?.assigneeUser.rank &&
-                  packet?.phases[packet?.currentPhase]?.assigneeUser
-                    .firstName &&
+                  packet?.phases[packet?.currentPhase]?.assigneeUser.firstName &&
                   packet?.phases[packet?.currentPhase]?.assigneeUser.lastName
-                    ? `Awaiting ${packet.phases[
-                        packet.currentPhase
-                      ].phase.toLowerCase()} by ${
-                        packet.phases[packet.currentPhase].assigneeUser.rank
-                      } ${
-                        packet.phases[packet.currentPhase].assigneeUser
-                          .firstName
-                      } ${
-                        packet.phases[packet.currentPhase].assigneeUser.lastName
-                      }`
+                    ? packet.phases[packet.currentPhase].phase === "Completed"
+                      ? `Completed by ${
+                          packet.phases[packet.currentPhase].assigneeUser.rank
+                        } ${
+                          packet.phases[packet.currentPhase].assigneeUser.firstName
+                        } ${
+                          packet.phases[packet.currentPhase].assigneeUser.lastName
+                        }`
+                      : `Awaiting ${packet.phases[packet.currentPhase].phase.toUpperCase()} by ${
+                          packet.phases[packet.currentPhase].assigneeUser.rank
+                        } ${
+                          packet.phases[packet.currentPhase].assigneeUser.firstName
+                        } ${
+                          packet.phases[packet.currentPhase].assigneeUser.lastName
+                        }`
                     : "Error Fetching"}
                 </p>
               </td>
@@ -79,9 +83,11 @@ function PacketTable({ packets, sectionName }) {
                 >
                   View
                 </Button>
-                <Button variant="secondary" size="sm" disabled>
-                  Reassign
-                </Button>
+                {packet.phases[packet.currentPhase].phase !== "Completed" && (
+                  <Button variant="secondary" size="sm" disabled>
+                    Reassign
+                  </Button>
+                )}
               </td>
             </tr>
           ))}

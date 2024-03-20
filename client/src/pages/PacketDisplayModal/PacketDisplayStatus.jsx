@@ -1,6 +1,6 @@
 import { ListGroup, Card } from "react-bootstrap";
 
-const Status = ({ packet, assignee }) => (
+const Status = ({ packet }) => (
   <ListGroup variant="flush">
     <ListGroup.Item>
       <h3>Packet Status</h3>
@@ -17,7 +17,12 @@ const Status = ({ packet, assignee }) => (
                 <strong>Step Number:</strong> {phase.stepNumber}
               </Card.Text>
               <Card.Text>
-                <strong>Assignee:</strong> {assignee || "N/A"}
+                <strong>Assignee:</strong>{" "}
+                {phase.assigneeUser.rank +
+                  " " +
+                  phase.assigneeUser.firstName +
+                  " " +
+                  phase.assigneeUser.lastName || "N/A"}
               </Card.Text>
               <Card.Text>
                 <strong>Comments:</strong> {phase.comments || "No comments"}
