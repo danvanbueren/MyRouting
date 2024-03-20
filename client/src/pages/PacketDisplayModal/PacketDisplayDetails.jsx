@@ -48,6 +48,12 @@ const Details = ({ packet, creator, assignee }) => {
                   <Card.Text>
                     Comments: {phase.comments || "No comments"}
                   </Card.Text>
+
+                  {phase.completionDate && (
+                    <Card.Text>
+                      Completion Date: {new Date(phase.completionDate).toLocaleString()}
+                    </Card.Text>
+                  )}
                 </Card.Body>
               </Card>
             ))}

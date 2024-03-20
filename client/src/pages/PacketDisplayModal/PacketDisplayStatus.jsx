@@ -27,6 +27,13 @@ const Status = ({ packet }) => (
               <Card.Text>
                 <strong>Comments:</strong> {phase.comments || "No comments"}
               </Card.Text>
+
+              {phase.completionDate && (
+                    <Card.Text>
+                      <strong>
+                      Completion Date: </strong>{new Date(phase.completionDate).toLocaleString()}
+                    </Card.Text>
+                  )}
             </Card.Body>
           </Card>
         ))}
