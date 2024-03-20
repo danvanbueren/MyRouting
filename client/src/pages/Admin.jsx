@@ -23,6 +23,7 @@ function Admin() {
     message: "",
     color: "primary",
   });
+
   // Function to be passed to the modal
   const handleSelectMember = (member) => {
     setSelectedMember(member);
@@ -33,19 +34,28 @@ function Admin() {
   const filterPackets = (packets) => {
     const awaitingReview = packets.filter(
       (packet) =>
-       (packet.phases[packet.currentPhase].phase.toLowerCase() === "review" || packet.phases[packet.currentPhase].phase.toLowerCase() === "concur")  && packet.phases[packet.currentPhase].assignee !== "1c40ad46-e5f7-11ee-b57a-e39ea2c18650"
+        (packet.phases[packet.currentPhase].phase.toLowerCase() === "review" ||
+          packet.phases[packet.currentPhase].phase.toLowerCase() ===
+            "concur") &&
+        packet.phases[packet.currentPhase].assignee !==
+          "1c40ad46-e5f7-11ee-b57a-e39ea2c18650"
     );
     const awaitingSignature = packets.filter(
       (packet) =>
-        packet.phases[packet.currentPhase].phase.toLowerCase() === "signature" && packet.phases[packet.currentPhase].assignee !== "1c40ad46-e5f7-11ee-b57a-e39ea2c18650"
+        packet.phases[packet.currentPhase].phase.toLowerCase() ===
+          "signature" &&
+        packet.phases[packet.currentPhase].assignee !==
+          "1c40ad46-e5f7-11ee-b57a-e39ea2c18650"
     );
     const submittedAFPC = packets.filter(
       (packet) =>
-        packet.phases[packet.currentPhase].phase.toLowerCase() === "afpc" || packet.phases[packet.currentPhase].assignee === "1c40ad46-e5f7-11ee-b57a-e39ea2c18650"
+        packet.phases[packet.currentPhase].phase.toLowerCase() === "afpc" ||
+        packet.phases[packet.currentPhase].assignee ===
+          "1c40ad46-e5f7-11ee-b57a-e39ea2c18650"
     );
     const recentlyCompleted = packets.filter(
       (packet) =>
-        packet.phases[packet.currentPhase].phase.toLowerCase() === "completed" 
+        packet.phases[packet.currentPhase].phase.toLowerCase() === "completed"
     );
 
     setAwaitingReview(awaitingReview);
@@ -145,6 +155,7 @@ function Admin() {
             <PacketTable
               packets={awaitingReview}
               sectionName={"PendingAction"}
+              user={user}
             />
           </div>
         </div>
@@ -159,6 +170,7 @@ function Admin() {
             <PacketTable
               packets={awaitingSignature}
               sectionName={"awaitingSignature"}
+              user={user}
             />
           </div>
         </div>
@@ -174,6 +186,7 @@ function Admin() {
             <PacketTable
               packets={submittedAFPC}
               sectionName={"submittedAFPC"}
+              user={user}
             />
           </div>
         </div>
@@ -189,6 +202,7 @@ function Admin() {
             <PacketTable
               packets={recentlyCompleted}
               sectionName={"recentlyCompleted"}
+              user={user}
             />
           </div>
         </div>

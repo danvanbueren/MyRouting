@@ -1,13 +1,25 @@
-import { Modal, Button, ListGroup, Tab, Nav } from "react-bootstrap";
+import {
+  Modal,
+  Button,
+  ListGroup,
+  Tab,
+  Nav,
+  Dropdown,
+  Form,
+} from "react-bootstrap";
 import { getUser } from "../utils/user";
 import { useState, useEffect } from "react";
 import PacketDisplayStatus from "../pages/PacketDisplayModal/PacketDisplayStatus";
 import PacketDisplayDetails from "../pages/PacketDisplayModal/PacketDisplayDetails";
+import SignForm from "../pages/PacketDisplayModal/SignForm";
+import ReviewForm from "../pages/PacketDisplayModal/ReviewForm";
+import RerouteForm from "../pages/PacketDisplayModal/RerouteForm";
 
-const PacketDisplayModal = ({ isOpen, closeModal, packet }) => {
+const PacketDisplayModal = ({ isOpen, closeModal, packet, user }) => {
   const [creator, setCreator] = useState(null);
   const [assignee, setAssignee] = useState(null);
   const [activeKey, setActiveKey] = useState("status");
+  const [action, setAction] = useState(null);
 
   useEffect(() => {
     if (packet) {
@@ -16,6 +28,10 @@ const PacketDisplayModal = ({ isOpen, closeModal, packet }) => {
     }
   }, [packet]);
 
+  const handleActionSelect = (selectedAction) => {
+    setAction(selectedAction);
+  };
+
   return (
     <Modal show={isOpen} onHide={closeModal} size="lg">
       <Modal.Header closeButton>
@@ -23,12 +39,27 @@ const PacketDisplayModal = ({ isOpen, closeModal, packet }) => {
       </Modal.Header>
       <Modal.Body>
         <Tab.Container activeKey={activeKey} onSelect={setActiveKey}>
-          <Nav variant="tabs">
+          <Nav variant="tabs d-flex justify-content-between">
+            <div className="d-flex flex-direction-row">
+              <Nav.Item>
+                <Nav.Link eventKey="status">Status</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="details">Details</Nav.Link>
+              </Nav.Item>
+            </div>
             <Nav.Item>
-              <Nav.Link eventKey="status">Status</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="details">Details</Nav.Link>
+              <Dropdown onSelect={handleActionSelect}>
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  {action ? action : "Actions"}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item eventKey="Sign">Sign</Dropdown.Item>
+                  <Dropdown.Item eventKey="Review">Review</Dropdown.Item>
+                  <Dropdown.Item eventKey="Reroute">Reroute</Dropdown.Item>
+                  <Dropdown.Item eventKey="Deny">Deny</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </Nav.Item>
           </Nav>
           <Tab.Content>
@@ -38,6 +69,11 @@ const PacketDisplayModal = ({ isOpen, closeModal, packet }) => {
             <Tab.Pane eventKey="details">
               <PacketDisplayDetails packet={packet} creator={creator} />
             </Tab.Pane>
+            {action === "Sign" && <SignForm user={user} packet={packet} />}
+            {action === "Review" && <ReviewForm user={user} packet={packet} />}
+            {action === "Reroute" && (
+              <RerouteForm user={user} packet={packet} />
+            )}
           </Tab.Content>
         </Tab.Container>
       </Modal.Body>

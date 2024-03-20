@@ -15,6 +15,7 @@ const UserPacketTable = ({
   const [selectedPacket, setSelectedPacket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   if (packets.length < 1) {
     return (
       <Container>
@@ -106,6 +107,7 @@ const UserPacketTable = ({
           setSelectedPacket(null);
         }}
         packet={selectedPacket}
+        user={user}
       />
     </>
   );

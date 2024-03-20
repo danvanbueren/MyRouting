@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form, InputGroup, Card, FormControl } from "react-bootstrap";
+import {
+  Modal,
+  Button,
+  Form,
+  InputGroup,
+  Card,
+  FormControl,
+} from "react-bootstrap";
 import axios from "axios";
 import SearchMemberModal from "./SearchMemberModal";
+import MemberSelector from "./MemberSelector";
 
 const RoutingModal = ({
   isOpen,
@@ -47,8 +55,6 @@ const RoutingModal = ({
       assigneeRole: "MEMBER",
     });
   };
-
-   
 
   const handleRadioChange = (e) => {
     if (e.target.value === "Other") {
@@ -214,308 +220,288 @@ const RoutingModal = ({
 
   return (
     <>
-    <Modal show={isOpen} onHide={closeModal} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>{!isEdit ? "Add Routing" : "Edit Packet"}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <b>Routing Settings</b>
-            </Form.Label>
-            <p>Select the appropriate options to route your document.</p>
-          </Form.Group>
+      <Modal show={isOpen} onHide={closeModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{!isEdit ? "Add Routing" : "Edit Packet"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Routing Settings</b>
+              </Form.Label>
+              <p>Select the appropriate options to route your document.</p>
+            </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <b>Select Type</b>
-            </Form.Label>
-            <Form.Check
-              type="radio"
-              label="Memo for Record"
-              name="type"
-              id="type1"
-              onChange={() =>
-                handleRadioChange({ target: { value: "Memo for Record" } })
-              }
-              checked={selectedType === "Memo for Record"}
-            />
-
-            <Form.Check
-              type="radio"
-              label="DEROS Extension"
-              name="type"
-              id="type2"
-              onChange={() =>
-                handleRadioChange({ target: { value: "DEROS Extension" } })
-              }
-              checked={selectedType === "DEROS Extension"}
-            />
-
-            <Form.Check
-              type="radio"
-              label="Command Sponsorship"
-              name="type"
-              id="type3"
-              onChange={() =>
-                handleRadioChange({
-                  target: { value: "Command Sponsorship" },
-                })
-              }
-              checked={selectedType === "Command Sponsorship"}
-            />
-
-            <Form.Check
-              type="radio"
-              label="Training Report"
-              name="type"
-              id="type4"
-              onChange={() =>
-                handleRadioChange({ target: { value: "Training Report" } })
-              }
-              checked={selectedType === "Training Report"}
-            />
-
-            <InputGroup>
-              <InputGroup.Text>
-                <Form.Check
-                  type="radio"
-                  name="type"
-                  value="Other"
-                  onChange={handleRadioChange}
-                  checked={isOtherSelected}
-                />
-              </InputGroup.Text>
-              <Form.Control
-                type="text"
-                placeholder="Specify other type"
-                onChange={handleTextInputChange}
-                disabled={!isOtherSelected}
-                value={isOtherSelected ? selectedType : ""}
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Select Type</b>
+              </Form.Label>
+              <Form.Check
+                type="radio"
+                label="Memo for Record"
+                name="type"
+                id="type1"
+                onChange={() =>
+                  handleRadioChange({ target: { value: "Memo for Record" } })
+                }
+                checked={selectedType === "Memo for Record"}
               />
-            </InputGroup>
-          </Form.Group>
-          <div className="border-bottom my-3"></div>
 
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <b>Choose Recipient</b>
-            </Form.Label>
-            <Form.Check
-              type="radio"
-              label="Rater"
-              name="recipient"
-              id="recipient1"
-              onChange={() =>{
-                setSelectedRecipient({
-                  assignee: user.rater.userId,
-                  assigneeRole: "RATER",
-                })
-                setSelectedMember(null); // Reset the selected member
-              }
-              
+              <Form.Check
+                type="radio"
+                label="DEROS Extension"
+                name="type"
+                id="type2"
+                onChange={() =>
+                  handleRadioChange({ target: { value: "DEROS Extension" } })
+                }
+                checked={selectedType === "DEROS Extension"}
+              />
 
-              }
-              checked={
-                selectedRecipient &&
-                selectedRecipient.assigneeRole.toUpperCase() === "RATER"
-              }
-            />
+              <Form.Check
+                type="radio"
+                label="Command Sponsorship"
+                name="type"
+                id="type3"
+                onChange={() =>
+                  handleRadioChange({
+                    target: { value: "Command Sponsorship" },
+                  })
+                }
+                checked={selectedType === "Command Sponsorship"}
+              />
 
-            <Form.Check
-              type="radio"
-              label="CSS"
-              name="recipient"
-              id="recipient2"
-              onChange={() =>{
-                setSelectedRecipient({
-                  assignee: CSS.userId,
-                  assigneeRole: "CSS",
-                })
-                setSelectedMember(null); // Reset the selected member
+              <Form.Check
+                type="radio"
+                label="Training Report"
+                name="type"
+                id="type4"
+                onChange={() =>
+                  handleRadioChange({ target: { value: "Training Report" } })
+                }
+                checked={selectedType === "Training Report"}
+              />
 
-              }
-              
-              }
-              checked={
-                selectedRecipient &&
-                selectedRecipient.assigneeRole.toUpperCase() === "CSS"
-              }
-            />
-
-            <Form.Check
-              type="radio"
-              label="Commander"
-              name="recipient"
-              id="recipient3"
-              onChange={() => {
-
-                setSelectedRecipient("Commander")
-                setSelectedMember(null); // Reset the selected member
-
-              }
-              }
-              
-
-              checked={selectedRecipient === "Commander"}
-            />
-
-<InputGroup className="mb-3">
-                <InputGroup.Text>Member</InputGroup.Text>
-                <FormControl
-                  readOnly
-                  placeholder="Click to select member"
-                  value={selectedMember ? `${selectedMember.rank} ${selectedMember.firstName} ${selectedMember.lastName}` : ""}
-                  onClick={() => setShowSearchMemberModal(true)}
+              <InputGroup>
+                <InputGroup.Text>
+                  <Form.Check
+                    type="radio"
+                    name="type"
+                    value="Other"
+                    onChange={handleRadioChange}
+                    checked={isOtherSelected}
+                  />
+                </InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder="Specify other type"
+                  onChange={handleTextInputChange}
+                  disabled={!isOtherSelected}
+                  value={isOtherSelected ? selectedType : ""}
                 />
               </InputGroup>
-              
-
-          
+            </Form.Group>
             <div className="border-bottom my-3"></div>
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <b>Select Action</b>
-            </Form.Label>
-            <Form.Check
-              type="radio"
-              label="Review"
-              name="action"
-              id="action1"
-              onChange={() => setSelectedAction("Review")}
-              checked={selectedAction == "Review"}
-            />
 
-            <Form.Check
-              type="radio"
-              label="Concur"
-              name="action"
-              id="action2"
-              onChange={() => setSelectedAction("Concur")}
-              checked={selectedAction === "Concur"}
-            />
-
-            <Form.Check
-              type="radio"
-              label="Signature"
-              name="action"
-              id="action3"
-              onChange={() => setSelectedAction("Signature")}
-              checked={selectedAction === "Signature"}
-            />
-
-            <Form.Check
-              type="radio"
-              label="Note"
-              name="action"
-              id="action4"
-              onChange={() => setSelectedAction("Note")}
-              checked={selectedAction === "Note"}
-            />
-
-         
-            <div className="border-bottom my-3"></div>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <b>Summary of Request</b>
-            </Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              value={summary}
-              onChange={(e) => setSummary(e.target.value)}
-            />
-          </Form.Group>
-          <div className="border-bottom my-3"></div>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <b>Suspense Date</b>
-            </Form.Label>
-            <Form.Control
-              type="date"
-              value={suspenseDate}
-              onChange={(e) => setSuspenseDate(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <b>Close Out Date</b>
-            </Form.Label>
-            <Form.Control
-              type="date"
-              value={closeOutDate}
-              onChange={(e) => setCloseOutDate(e.target.value)}
-            />
-          </Form.Group>
-          {isEdit &&
-            packet &&
-            packet.files &&
-            packet.files.map((file, index) => (
-              <Card key={index} className="mb-3">
-                <Card.Body>
-                  <Card.Title>
-                    File Name:
-                    <Button
-                      variant="link"
-                      onClick={() => handleDownload(file.fileId)}
-                    >
-                      {file.name}
-                    </Button>
-                  </Card.Title>
-                  <Card.Text>
-                    Created At: {new Date(file.createdAt).toLocaleString()}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            ))}
-          <Form.Group className="mb-3">
-            <Form.Label>
-              <b>Add Documents</b>
-            </Form.Label>
-            <Form.Control
-              type="file"
-              accept=".pdf"
-              multiple
-              onChange={(e) => setSelectedFile(e.target.files)}
-            />
-          </Form.Group>
-          <div
-            style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
-          >
-            <Button variant="secondary" type="submit">
-              {!isEdit ? "Submit Packet" : "Update Packet"}
-            </Button>
-            {isEdit && (
-              <Button
-                variant="danger"
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      "Are you sure you want to delete this packet?"
-                    )
-                  ) {
-                    handleDelete(packet);
-                  }
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Choose Recipient</b>
+              </Form.Label>
+              <Form.Check
+                type="radio"
+                label="Rater"
+                name="recipient"
+                id="recipient1"
+                onChange={() => {
+                  setSelectedRecipient({
+                    assignee: user.rater.userId,
+                    assigneeRole: "RATER",
+                  });
+                  setSelectedMember(null); // Reset the selected member
                 }}
-              >
-                Delete Packet
+                checked={
+                  selectedRecipient &&
+                  selectedRecipient.assigneeRole.toUpperCase() === "RATER"
+                }
+              />
+
+              <Form.Check
+                type="radio"
+                label="CSS"
+                name="recipient"
+                id="recipient2"
+                onChange={() => {
+                  setSelectedRecipient({
+                    assignee: CSS.userId,
+                    assigneeRole: "CSS",
+                  });
+                  setSelectedMember(null); // Reset the selected member
+                }}
+                checked={
+                  selectedRecipient &&
+                  selectedRecipient.assigneeRole.toUpperCase() === "CSS"
+                }
+              />
+
+              <Form.Check
+                type="radio"
+                label="Commander"
+                name="recipient"
+                id="recipient3"
+                onChange={() => {
+                  setSelectedRecipient("Commander");
+                  setSelectedMember(null); // Reset the selected member
+                }}
+                checked={selectedRecipient === "Commander"}
+              />
+
+              <MemberSelector
+                onSelectMember={onSelectMember}
+                selectedMember={selectedMember}
+              />
+
+              <div className="border-bottom my-3"></div>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Select Action</b>
+              </Form.Label>
+              <Form.Check
+                type="radio"
+                label="Review"
+                name="action"
+                id="action1"
+                onChange={() => setSelectedAction("Review")}
+                checked={selectedAction == "Review"}
+              />
+
+              <Form.Check
+                type="radio"
+                label="Concur"
+                name="action"
+                id="action2"
+                onChange={() => setSelectedAction("Concur")}
+                checked={selectedAction === "Concur"}
+              />
+
+              <Form.Check
+                type="radio"
+                label="Signature"
+                name="action"
+                id="action3"
+                onChange={() => setSelectedAction("Signature")}
+                checked={selectedAction === "Signature"}
+              />
+
+              <Form.Check
+                type="radio"
+                label="Note"
+                name="action"
+                id="action4"
+                onChange={() => setSelectedAction("Note")}
+                checked={selectedAction === "Note"}
+              />
+
+              <div className="border-bottom my-3"></div>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Summary of Request</b>
+              </Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
+              />
+            </Form.Group>
+            <div className="border-bottom my-3"></div>
+
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Suspense Date</b>
+              </Form.Label>
+              <Form.Control
+                type="date"
+                value={suspenseDate}
+                onChange={(e) => setSuspenseDate(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Close Out Date</b>
+              </Form.Label>
+              <Form.Control
+                type="date"
+                value={closeOutDate}
+                onChange={(e) => setCloseOutDate(e.target.value)}
+              />
+            </Form.Group>
+            {isEdit &&
+              packet &&
+              packet.files &&
+              packet.files.map((file, index) => (
+                <Card key={index} className="mb-3">
+                  <Card.Body>
+                    <Card.Title>
+                      File Name:
+                      <Button
+                        variant="link"
+                        onClick={() => handleDownload(file.fileId)}
+                      >
+                        {file.name}
+                      </Button>
+                    </Card.Title>
+                    <Card.Text>
+                      Created At: {new Date(file.createdAt).toLocaleString()}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              ))}
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <b>Add Documents</b>
+              </Form.Label>
+              <Form.Control
+                type="file"
+                accept=".pdf"
+                multiple
+                onChange={(e) => setSelectedFile(e.target.files)}
+              />
+            </Form.Group>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "1rem",
+              }}
+            >
+              <Button variant="secondary" type="submit">
+                {!isEdit ? "Submit Packet" : "Update Packet"}
               </Button>
-            )}
-          </div>
-        </Form>
-      </Modal.Body>
-    </Modal>
-       <SearchMemberModal
-       isOpen={showSearchMemberModal}
-       closeModal={() => setShowSearchMemberModal(false)}
-       onSelectMember={onSelectMember}
-     />
+              {isEdit && (
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this packet?"
+                      )
+                    ) {
+                      handleDelete(packet);
+                    }
+                  }}
+                >
+                  Delete Packet
+                </Button>
+              )}
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
