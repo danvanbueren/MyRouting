@@ -59,7 +59,6 @@ const UserPacketTable = ({
               <td style={{ display: "flex", justifyContent: "space-evenly" }}>
                 <Button
                   variant="secondary"
-                  size="sm w-25"
                   onClick={() => {
                     setSelectedPacket(packet);
                     setIsModalOpen(true);
@@ -67,20 +66,26 @@ const UserPacketTable = ({
                 >
                   View
                 </Button>
-                <Button
-                  variant="secondary"
-                  size="sm w-25"
-                  onClick={() => {
-                    setSelectedPacket(packet);
-                    setIsEditModalOpen(true);
-                    onEditPacket(packet);
-                  }}
-                >
-                  Edit
-                </Button>
-                <Button variant="secondary" size="sm w-30" disabled>
-                  Reassign
-                </Button>
+
+                {packet.phases[packet.currentPhase].phase.toLowerCase() !== "completed" && (
+                  <>
+                    <Button
+                      variant="secondary"
+                      size="sm w-25"
+                      onClick={() => {
+                        setSelectedPacket(packet);
+                        setIsEditModalOpen(true);
+                        onEditPacket(packet);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button variant="secondary" size="sm w-30" disabled>
+                      Reassign
+                    </Button>
+                  </>
+                )}
+
               </td>
             </tr>
           ))}

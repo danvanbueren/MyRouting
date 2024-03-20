@@ -66,19 +66,23 @@ const Dashboard = () => {
     setIsEditModalOpen(true);
   };
 
+
+
+
   const readyForActionPackets = packets.filter(
     (packet) =>
-      packet.phases.assignee === user.userId &&
-      packet.phases.phase !== "Completed"
+      packet.phases[packet.currentPhase].assignee === user.userId &&
+      packet.phases[packet.currentPhase].phase.toLowerCase() !== "completed"
   );
   const awaitingCoordinationPackets = packets.filter(
     (packet) =>
-      packet.phases.assignee !== user.userId &&
-      packet.phases.phase !== "Completed"
+      packet.phases[packet.currentPhase].assignee !== user.userId &&
+      packet.phases[packet.currentPhase].phase.toLowerCase() !== "completed"
   );
   const completedPackets = packets.filter(
-    (packet) => packet.phases.phase === "Completed"
+    (packet) => packet.phases[packet.currentPhase].phase.toLowerCase() === "completed"
   );
+
 
   return (
     <>
