@@ -20,7 +20,6 @@ const PacketDisplayModal = ({ isOpen, closeModal, packet, user }) => {
   const [assignee, setAssignee] = useState(null);
   const [activeKey, setActiveKey] = useState("status");
   const [action, setAction] = useState(null);
-
   useEffect(() => {
     if (packet) {
       getUser(packet.creator).then(setCreator);
@@ -31,7 +30,6 @@ const PacketDisplayModal = ({ isOpen, closeModal, packet, user }) => {
   const handleActionSelect = (selectedAction) => {
     setAction(selectedAction);
   };
-
   return (
     <Modal show={isOpen} onHide={closeModal} size="lg">
       <Modal.Header closeButton>
@@ -54,10 +52,17 @@ const PacketDisplayModal = ({ isOpen, closeModal, packet, user }) => {
                   {action ? action : "Actions"}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item eventKey="Sign">Sign</Dropdown.Item>
-                  <Dropdown.Item eventKey="Review">Review</Dropdown.Item>
+                  {packet?.phases[packet.currentPhase].phase ===
+                    "Signature" && (
+                    <Dropdown.Item eventKey="Sign">Sign</Dropdown.Item>
+                  )}
+                  {packet?.phases[packet.currentPhase].phase === "Review" && (
+                    <Dropdown.Item eventKey="Review">Review</Dropdown.Item>
+                  )}
+                  {packet?.phases[packet.currentPhase].phase === "Concur" && (
+                    <Dropdown.Item eventKey="Concur">Concur</Dropdown.Item>
+                  )}
                   <Dropdown.Item eventKey="Reroute">Reroute</Dropdown.Item>
-                  <Dropdown.Item eventKey="Deny">Deny</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Nav.Item>
