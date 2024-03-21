@@ -1,8 +1,10 @@
 import express from "express";
 
 import { getUsers, getUserById } from "../controllers/userController.js";
-import { getUserPackets } from "../controllers/packetController.js";
-import { downloadFile } from "../controllers/fileController.js";
+import { createPacket, editPacketById, getUserPackets , deletePacketById, editPacketPhases, addPacketPhases, editPhaseById} from "../controllers/packetController.js";
+import { downloadFile, uploadFile, deleteFileById } from "../controllers/fileController.js";
+import { userUpload } from "../config/multerConfig.js";
+import multer from 'multer';
 
 export const userRoutes = express.Router();
 
@@ -158,6 +160,13 @@ userRoutes.get("/users/:userId", getUserById);
  *     tags:
  *       - Users
  *     summary: Returns a list of packets associated with a user
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     description: The ID of the user
  *     responses:
  *       200:
  *         description: A JSON array of packet objects
@@ -211,3 +220,46 @@ userRoutes.get("/users/:userId/packets", getUserPackets);
  *         description: Unauthorized - User does not have permission to access this file
  */
 userRoutes.get("/users/:userId/packets/:packetId/files/:fileId", downloadFile);
+/*
+userRoutes.post(
+    "/users/:userId/packets",createPacket
+  );
+*/
+  userRoutes.post(
+    "/users/:userId/packets",
+        userUpload.array('files') ,
+           (req, res, next) => {
+          if (req.body.data) {
+            // Attempt to parse the JSON data
+            try {
+              req.body.data = JSON.parse(req.body.data);
+            } catch (error) {
+              return res.status(400).json({ error: "Invalid JSON format in 'data' field." });
+            }
+          }
+          next();
+        },
+        createPacket,
+        // Error handling middleware
+        // ...
+      );
+/*
+userRoutes.post(
+    "/users/:userId/packets/:packetId/files",
+    userUpload.single("document"),
+    (req, res, next) => {
+      req.documentType = req.body.documentType;
+      next();
+    },
+    uploadFile
+  );
+  */
+
+
+  userRoutes.delete("/users/:userId/packets/:packetId/files/:fileId", deleteFileById);
+  userRoutes.put("/users/:userId/packets/:packetId", editPacketById);
+  userRoutes.put("/users/:userId/packets/:packetId/phases", editPacketPhases);
+  userRoutes.post("/users/:userId/packets/:packetId/phases", addPacketPhases);
+  userRoutes.put("/users/:userId/packets/:packetId/phases/:packetPhaseId", editPhaseById);
+
+  userRoutes.delete("/users/:userId/packets/:packetId", deletePacketById);

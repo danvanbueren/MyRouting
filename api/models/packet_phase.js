@@ -14,7 +14,20 @@ export default class packetPhase extends Model {
     suspense: {
       type: DataTypes.DATEONLY,
       allowNull: true
+    },  
+    
+    closeOutDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+      field: "close_out_date"
     },
+    completed:{
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+
+
     comments: {
       type: DataTypes.TEXT,
       allowNull: true
@@ -50,7 +63,19 @@ export default class packetPhase extends Model {
         model: 'user',
         key: 'user_id'
       }
+    },
+    assigneeRole: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      field: "assignee_role"
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP'),
+      field: "created_at"
     }
+
   }, {
     sequelize,
     tableName: 'packet_phase',
