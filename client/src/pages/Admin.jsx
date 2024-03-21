@@ -24,7 +24,9 @@ function Admin() {
     message: "",
     color: "primary",
   });
+
   const { selectedUser } = useUser();
+
 
   // Function to be passed to the modal
   const handleSelectMember = (member) => {
@@ -33,7 +35,7 @@ function Admin() {
     setIsRoutingModalOpen(true);
   };
 
-  const filterPackets = (packets) => {
+ const filterPackets = (packets) => {
     const awaitingReview = packets.filter(
       (packet) =>
         (packet.phases[packet.currentPhase].phase.toLowerCase() === "review" ||
@@ -154,6 +156,7 @@ function Admin() {
             <PacketTable
               packets={awaitingReview}
               sectionName={"PendingAction"}
+              user={user}
             />
           </div>
         </div>
@@ -168,6 +171,7 @@ function Admin() {
             <PacketTable
               packets={awaitingSignature}
               sectionName={"awaitingSignature"}
+              user={user}
             />
           </div>
         </div>
@@ -183,6 +187,7 @@ function Admin() {
             <PacketTable
               packets={submittedAFPC}
               sectionName={"submittedAFPC"}
+              user={user}
             />
           </div>
         </div>
@@ -198,6 +203,7 @@ function Admin() {
             <PacketTable
               packets={recentlyCompleted}
               sectionName={"recentlyCompleted"}
+              user={user}
             />
           </div>
         </div>

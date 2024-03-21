@@ -3,7 +3,7 @@ import { Table, Button, Alert, Container, Row, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import PacketDisplayModal from "../components/PacketDisplayModal";
 
-function PacketTable({ packets, sectionName }) {
+function PacketTable({ packets, sectionName, user }) {
   const [selectedPacket, setSelectedPacket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -51,22 +51,29 @@ function PacketTable({ packets, sectionName }) {
                 <p>
                   {packet?.phases[packet?.currentPhase]?.phase &&
                   packet?.phases[packet?.currentPhase]?.assigneeUser.rank &&
-                  packet?.phases[packet?.currentPhase]?.assigneeUser.firstName &&
+                  packet?.phases[packet?.currentPhase]?.assigneeUser
+                    .firstName &&
                   packet?.phases[packet?.currentPhase]?.assigneeUser.lastName
                     ? packet.phases[packet.currentPhase].phase === "Completed"
                       ? `Completed by ${
                           packet.phases[packet.currentPhase].assigneeUser.rank
                         } ${
-                          packet.phases[packet.currentPhase].assigneeUser.firstName
+                          packet.phases[packet.currentPhase].assigneeUser
+                            .firstName
                         } ${
-                          packet.phases[packet.currentPhase].assigneeUser.lastName
+                          packet.phases[packet.currentPhase].assigneeUser
+                            .lastName
                         }`
-                      : `Awaiting ${packet.phases[packet.currentPhase].phase.toUpperCase()} by ${
+                      : `Awaiting ${packet.phases[
+                          packet.currentPhase
+                        ].phase.toUpperCase()} by ${
                           packet.phases[packet.currentPhase].assigneeUser.rank
                         } ${
-                          packet.phases[packet.currentPhase].assigneeUser.firstName
+                          packet.phases[packet.currentPhase].assigneeUser
+                            .firstName
                         } ${
-                          packet.phases[packet.currentPhase].assigneeUser.lastName
+                          packet.phases[packet.currentPhase].assigneeUser
+                            .lastName
                         }`
                     : "Error Fetching"}
                 </p>
@@ -101,6 +108,7 @@ function PacketTable({ packets, sectionName }) {
           setSelectedPacket(null);
         }}
         packet={selectedPacket}
+        user={user}
       />
     </>
   );

@@ -89,6 +89,12 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
     });
     closeModal();
   };
+
+  const handleSelectUser = (member) => {
+    onSelectMember(member);
+    handleModalClose();
+  };
+
   const TableHeader = () => (
     <thead>
       <tr>
@@ -218,7 +224,7 @@ const SearchMemberModal = ({ isOpen, closeModal, onSelectMember }) => {
         <Button
           variant="primary"
           disabled={!selectedMember}
-          onClick={() => onSelectMember(selectedMember)}
+          onClick={() => handleSelectUser(selectedMember)}
         >
           Next
         </Button>
