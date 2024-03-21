@@ -7,7 +7,7 @@ import RoutingModal from "../components/RoutingModal";
 import PacketDisplayModal from "../components/PacketDisplayModal";
 import UserPacketTable from "../components/UserPacketTable";
 import ToastMessage from "../components/ToastMessage";
-
+import { useUser } from "../context/UserContext";
 const Dashboard = () => {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
   const [packets, setPackets] = useState([]);
@@ -22,38 +22,36 @@ const Dashboard = () => {
     color: "primary",
   });
   const [refreshPackets, setRefreshPackets] = useState(false);
+  const { selectedUser, setSelectedUser } = useUser();
+
 
   useEffect(() => {
     document.title = "Demo myRouting";
     const getUser = async () => {
-      try {
-        const response = await axios.get(
-          `${
-            import.meta.env.VITE_API
-          }/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`
-        );
-        setUser(response.data);
-      } catch (error) {
-        console.error("Get user failed:", error);
+      if (selectedUser) {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_API}/api/users/${selectedUser}`);
+          setUser(response.data);
+        } catch (error) {
+          console.error("Get user failed:", error);
+        }
       }
     };
-
-    getUser();
-
+  
     const getPackets = async () => {
       try {
         const response = await axios.get(
-          `${
-            import.meta.env.VITE_API
-          }/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab/packets`
+          `${import.meta.env.VITE_API}/api/users/${selectedUser}/packets`
         );
         setPackets(response.data);
       } catch (error) {
         console.error("Get user failed:", error);
       }
     };
+  
+    getUser();
     getPackets();
-  }, [refreshPackets]);
+  },  [selectedUser,refreshPackets]);
 
   const handleSelectPacket = async (packet) => {
     setSelectedPacket(packet);
@@ -72,15 +70,15 @@ const Dashboard = () => {
   const readyForActionPackets = packets.filter(
     (packet) =>
       packet.phases[packet.currentPhase].assignee === user.userId &&
-      packet.phases[packet.currentPhase].phase.toLowerCase() !== "completed"
+      packet.phases[packet.currentPhase].phase.toLowerCase() !== "complete"
   );
   const awaitingCoordinationPackets = packets.filter(
     (packet) =>
       packet.phases[packet.currentPhase].assignee !== user.userId &&
-      packet.phases[packet.currentPhase].phase.toLowerCase() !== "completed"
+      packet.phases[packet.currentPhase].phase.toLowerCase() !== "complete"
   );
   const completedPackets = packets.filter(
-    (packet) => packet.phases[packet.currentPhase].phase.toLowerCase() === "completed"
+    (packet) => packet.phases[packet.currentPhase].phase.toLowerCase() === "complete"
   );
 
 
