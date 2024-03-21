@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+
+
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 
@@ -10,14 +12,15 @@ const rootDir = path.resolve(currentDir, '../');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const packetId = req.params.packetId;
-    const dest = path.join(rootDir,'private', packetId)
+    const tempDir = path.join(rootDir, 'private', 'temp');
 
-    fs.mkdirSync(dest, { recursive: true });
-    cb(null, dest);
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir, { recursive: true });
+    }
+    cb(null, tempDir);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); 
+    cb(null, Date.now() + '-' + file.originalname);
   }
 });
 
@@ -30,4 +33,4 @@ const fileFilter = (req, file, cb) => {
     }
   };
 
-export const userUpload = multer({ storage: storage, fileFilter: fileFilter });
+export const userUpload = multer({ storage: storage, fileFilter: fileFilter  });

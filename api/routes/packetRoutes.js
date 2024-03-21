@@ -1,8 +1,11 @@
 import express from "express";
 
-import { getPackets, getPacketById, createPacket } from "../controllers/packetController.js";
+import { getPackets, getPacketById, createPacket, editPacketById, deletePacketById } from "../controllers/packetController.js";
+
 import packet from "../models/packet.js";
-import { downloadFile } from "../controllers/fileController.js";
+import { downloadFile,deleteFileById } from "../controllers/fileController.js";
+import { userUpload } from "../config/multerConfig.js";
+import multer from 'multer';
 
 export const packetRoutes = express.Router();
 
@@ -100,59 +103,159 @@ export const packetRoutes = express.Router();
  *           $ref: '#/components/schemas/User'
  */
 
-
-
-
-
 /**
  * @openapi
  * /api/packets:
- *   get:
+ *   post:
  *     tags:
  *       - Packets
- *     summary: Returns a list of packets
+ *     summary: Creates a new packet
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PacketDetail'
  *     responses:
- *       200:
- *         description: A JSON array of user objects
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/PacketDetail'
+ *       201:
+ *         description: Packet created successfully
+ *       400:
+ *         description: Invalid input data
  */
-packetRoutes.get("/packets", getPackets);
-
-
-
 
 /**
  * @openapi
- * /api/packets/{packetId}:
+ * /api/packets/{packetId}/files/{fileId}:
  *   get:
  *     tags:
  *       - Packets
- *     summary: Gets a packet by ID
+ *     summary: Downloads a file by ID
  *     parameters:
  *       - in: path
  *         name: packetId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *         description: The packet's ID
+ *       - in: path
+ *         name: fileId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The file's ID
  *     responses:
  *       200:
- *         description: A packet object
+ *         description: File downloaded successfully
  *         content:
- *           application/json:
+ *           application/octet-stream:
  *             schema:
- *               $ref: '#/components/schemas/PacketDetail'
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: File not found
+ */
+
+/**
+ * @openapi
+ * /api/packets/{packetId}/files/{fileId}:
+ *   delete:
+ *     tags:
+ *       - Packets
+ *     summary: Deletes a file by ID
+ *     parameters:
+ *       - in: path
+ *         name: packetId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The packet's ID
+ *       - in: path
+ *         name: fileId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The file's ID
+ *     responses:
+ *       200:
+ *         description: File deleted successfully
+ *       404:
+ *         description: File not found
+ */
+
+/**
+ * @openapi
+ * /api/packets/{packetId}:
+ *   put:
+ *     tags:
+ *       - Packets
+ *     summary: Edits a packet by ID
+ *     parameters:
+ *       - in: path
+ *         name: packetId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The packet's ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PacketDetail'
+ *     responses:
+ *       200:
+ *         description: Packet updated successfully
  *       404:
  *         description: Packet not found
  */
+
+/**
+ * @openapi
+ * /api/packets/{packetId}:
+ *   delete:
+ *     tags:
+ *       - Packets
+ *     summary: Deletes a packet by ID
+ *     parameters:
+ *       - in: path
+ *         name: packetId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The packet's ID
+ *     responses:
+ *       200:
+ *         description: Packet deleted successfully
+ *       404:
+ *         description: Packet not found
+ */
+
+
+
+packetRoutes.get("/packets", getPackets);
 packetRoutes.get("/packets/:packetId", getPacketById);
-
-
-packetRoutes.post("/packets", createPacket);
-
 packetRoutes.get("/packets/:packetId/files/:fileId", downloadFile);
+packetRoutes.delete("/packets/:packetId/files/:fileId", deleteFileById);
+packetRoutes.put("/packets/:packetId", editPacketById);
+packetRoutes.delete("/packets/:packetId", deletePacketById);
+
+
+  
+packetRoutes.post(
+    "/packets",
+    userUpload.array('files') ,
+       (req, res, next) => {
+      if (req.body.data) {
+        // Attempt to parse the JSON data
+        try {
+          req.body.data = JSON.parse(req.body.data);
+        } catch (error) {
+          return res.status(400).json({ error: "Invalid JSON format in 'data' field." });
+        }
+      }
+      next();
+    },
+    createPacket,
+    // Error handling middleware
+    // ...
+  );

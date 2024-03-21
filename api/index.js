@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { userRoutes } from "./routes/userRoutes.js";
+import swaggerDocument from "./swagger.json" assert { type: "json" };
 
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -26,16 +27,17 @@ const options = {
     apis: ['./routes/*.js'], 
   };
   
-  const openapiSpecification = swaggerJsdoc(options);
-
+ // const openapiSpecification = swaggerJsdoc(options);
 const port = process.env.PORT || 3000;
 
 const app = express();
 
 app.disable("x-powered-by");
 app.use(cors({ origin: '*' }))
+app.use(bodyParser.json());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
+//app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 
 app.use("/api", userRoutes);
 app.use("/api", packetRoutes);
