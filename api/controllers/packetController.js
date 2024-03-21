@@ -318,13 +318,11 @@ export const getPacketById = async (req, res) => {
       ]
     });
 
- 
     if (!packet) {
-        res.status(500).json({ message: "INTERNALE SERVER ERROR" });
-      }
+      res.status(404).json({ message: "Packet not found" });
+    } else {
       res.status(200).json(packet);
-
-
+    }
   } catch (error) {
     res.status(400).json(error);
   }
@@ -340,7 +338,8 @@ export const deletePacketById = async (req, res) => {
     });
 
     const finalDest = path.join(rootDir, 'private', String(packetId));
-    await fs.remove(finalDest); 
+    fs.rmSync(finalDest, { recursive: true, force: true });
+
 
     if (!deletedPacket) {
       res.status(404).json({ message: "Packet not found" });
