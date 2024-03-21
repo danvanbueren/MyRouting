@@ -90,7 +90,7 @@ function PacketTable({ packets, sectionName, user }) {
                 >
                   View
                 </Button>
-                {packet.phases[packet.currentPhase].phase.toLowerCase() !== "completed" && (
+                {packet.phases[packet.currentPhase].phase.toLowerCase() !== "complete" && (
                   <Button variant="secondary" size="sm" disabled>
                     Reassign
                   </Button>

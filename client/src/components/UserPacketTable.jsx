@@ -67,7 +67,7 @@ const UserPacketTable = ({
                   View
                 </Button>
 
-                {packet.phases[packet.currentPhase].phase.toLowerCase() !== "completed" && (
+                {packet.phases[packet.currentPhase].phase.toLowerCase() !== "complete" && (
                   <>
                     <Button
                       variant="secondary"
