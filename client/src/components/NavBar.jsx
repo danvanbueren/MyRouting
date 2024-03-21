@@ -5,6 +5,7 @@ import UserLogo from "../assets/img/USER.svg";
 import Logo from "./Logo";
 import SearchBar from "./Searchbar.jsx";
 import Dropdown from "./Dropdowns";
+import UserDropdown from "./UserDropdown";
 
 function Navbar() {
   return (
@@ -62,6 +63,8 @@ function Navbar() {
         </div>
         <Logo src={UserLogo} alt="User Logo" style={{ maxWidth: "50px" }} />
       </div>
+
+      <UserDropdown className="d-md-none" />
     </nav>
   );
 }
