@@ -101,7 +101,7 @@ export const createPacket = async (req, res) => {
           model: models.packetPhase,
           as: "phases",
           include: [{ model: models.user, as: "assigneeUser" }],
-          order: [["createdAt", "DESC"]],
+order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ],
     });
@@ -162,7 +162,7 @@ export const editPacketPhases = async (req, res) => {
           model: models.packetPhase,
           as: "phases",
           include: [{ model: models.user, as: "assigneeUser" }],
-          order: [["createdAt", "DESC"]],
+order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ],
     });
@@ -193,7 +193,7 @@ export const editPacketPhases = async (req, res) => {
           model: models.packetPhase,
           as: "phases",
           include: [{ model: models.user, as: "assigneeUser" }],
-          order: [["createdAt", "DESC"]],
+order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ],
     });
@@ -220,7 +220,7 @@ export const addPacketPhases = async (req, res) => {
           model: models.packetPhase,
           as: "phases",
           include: [{ model: models.user, as: "assigneeUser" }],
-          order: [["createdAt", "DESC"]],
+order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ],
       transaction: t,
@@ -260,7 +260,7 @@ export const addPacketPhases = async (req, res) => {
           model: models.packetPhase,
           as: "phases",
           include: [{ model: models.user, as: "assigneeUser" }],
-          order: [["createdAt", "DESC"]],
+order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ],
       transaction: t,
@@ -288,7 +288,7 @@ export const getPackets = async (req, res) => {
           model: models.packetPhase,
           as: "phases",
           include: [{ model: models.user, as: "assigneeUser" }],
-          order: [["createdAt", "DESC"]],
+order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ],
     });
@@ -313,7 +313,7 @@ export const getPacketById = async (req, res) => {
           model: models.packetPhase,
           as: "phases",
           include: [{ model: models.user, as: "assigneeUser" }],
-          order: [["createdAt", "DESC"]],
+          order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ]
     });
@@ -432,7 +432,7 @@ export const editPacketById = async (req, res) => {
           model: models.packetPhase,
           as: "phases",
           include: [{ model: models.user, as: "assigneeUser" }],
-          order: [["createdAt", "DESC"]],
+order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ],
     });
@@ -447,19 +447,17 @@ export const getUserPackets = async (req, res) => {
   try {
     const userId = req.params.userId;
 
-
     const packets = await models.packet.findAll({
       include: [
         {
           model: models.file,
           as: "files",
         },
-        {model: models.user, as: "creatorUser"},
+        { model: models.user, as: "creatorUser" },
         {
           model: models.packetPhase,
           as: "phases",
-          include: [{ model: models.user, as: "assigneeUser" }],
-          order: [["createdAt", "DESC"]],
+          order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ],
       where: {
@@ -467,18 +465,16 @@ export const getUserPackets = async (req, res) => {
           { creator: userId }, // Packets where the user is the creator
           // Include packets where the user is an assignee in any phase
           // This condition doesn't filter phases; it's used to include packets
-          { '$phases.assignee$': userId }
-        ]
+          { "$phases.assignee$": userId },
+        ],
       },
-      subQuery: false
+      subQuery: false,
     });
-   
+
     if (!packets) {
-        res.status(500).json({ message: "INTERNALE SERVER ERROR" });
-      }
-      res.status(200).json(packets);
-
-
+      res.status(500).json({ message: "INTERNAL SERVER ERROR" });
+    }
+    res.status(200).json(packets);
   } catch (error) {
     res.status(400).json(error);
   }

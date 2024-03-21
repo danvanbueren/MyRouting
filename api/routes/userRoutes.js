@@ -125,106 +125,16 @@ const openAPISchemas = `
  */
 userRoutes.get("/users", getUsers);
 
-// Route to get a user by ID
-/**
- * @openapi
- * /api/users/{userId}:
- *   get:
- *     tags:
- *       - Users
- *     summary: Gets a user by ID
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: The user's ID
- *     responses:
- *       200:
- *         description: A user object
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       404:
- *         description: User not found
- */
+
+ 
 userRoutes.get("/users/:userId", getUserById);
 
-// Route to get a user's packets
-/**
- * @openapi
- * /api/users/{userId}/packets:
- *   get:
- *     tags:
- *       - Users
- *     summary: Returns a list of packets associated with a user
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *     description: The ID of the user
- *     responses:
- *       200:
- *         description: A JSON array of packet objects
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/PacketDetail'
- */
+
+ 
 userRoutes.get("/users/:userId/packets", getUserPackets);
 
-/**
- * @openapi
- * /api/users/{userId}/packets/{packetId}/files/{fileId}:
- *   get:
- *     tags:
- *       - Files
- *     summary: Download a PDF file
- *     description: Downloads a specific PDF file associated with a user's packet.
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the user
- *       - in: path
- *         name: packetId
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the packet
- *       - in: path
- *         name: fileId
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the file to download
- *     responses:
- *       200:
- *         description: The PDF file
- *         content:
- *           application/pdf:
- *             schema:
- *               type: string
- *               format: binary
- *       404:
- *         description: File not found
- *       401:
- *         description: Unauthorized - User does not have permission to access this file
- */
+
 userRoutes.get("/users/:userId/packets/:packetId/files/:fileId", downloadFile);
-/*
-userRoutes.post(
-    "/users/:userId/packets",createPacket
-  );
-*/
   userRoutes.post(
     "/users/:userId/packets",
         userUpload.array('files') ,
@@ -243,17 +153,6 @@ userRoutes.post(
         // Error handling middleware
         // ...
       );
-/*
-userRoutes.post(
-    "/users/:userId/packets/:packetId/files",
-    userUpload.single("document"),
-    (req, res, next) => {
-      req.documentType = req.body.documentType;
-      next();
-    },
-    uploadFile
-  );
-  */
 
 
   userRoutes.delete("/users/:userId/packets/:packetId/files/:fileId", deleteFileById);

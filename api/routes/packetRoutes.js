@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getPackets, getPacketById, createPacket, editPacketById, deletePacketById } from "../controllers/packetController.js";
+import { getPackets, getPacketById, createPacket, editPacketById, deletePacketById,addPacketPhases, editPacketPhases,  } from "../controllers/packetController.js";
 
 import packet from "../models/packet.js";
 import { downloadFile,deleteFileById } from "../controllers/fileController.js";
@@ -17,7 +17,8 @@ packetRoutes.get("/packets/:packetId/files/:fileId", downloadFile);
 packetRoutes.delete("/packets/:packetId/files/:fileId", deleteFileById);
 packetRoutes.put("/packets/:packetId", editPacketById);
 packetRoutes.delete("/packets/:packetId", deletePacketById);
-
+packetRoutes.post("/packets/phases", addPacketPhases);
+packetRoutes.put("/packets/phases", editPacketPhases);
 
   
 packetRoutes.post(
