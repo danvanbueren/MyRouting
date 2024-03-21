@@ -66,21 +66,28 @@ const Dashboard = () => {
 
 
 
-
-  const readyForActionPackets = packets.filter(
-    (packet) =>
-      packet.phases[packet.currentPhase].assignee === user.userId &&
-      packet.phases[packet.currentPhase].phase.toLowerCase() !== "complete"
-  );
-  const awaitingCoordinationPackets = packets.filter(
-    (packet) =>
-      packet.phases[packet.currentPhase].assignee !== user.userId &&
-      packet.phases[packet.currentPhase].phase.toLowerCase() !== "complete"
-  );
-  const completedPackets = packets.filter(
-    (packet) => packet.phases[packet.currentPhase].phase.toLowerCase() === "complete"
-  );
-
+  const readyForActionPackets = packets.filter(packet => {
+    const currentPhaseObj = packet.phases && packet.phases[packet.currentPhase];
+    return (
+      currentPhaseObj && 
+      currentPhaseObj.assignee === user.userId &&
+      currentPhaseObj.phase.toLowerCase() !== "complete"
+    );
+  });
+  
+  const awaitingCoordinationPackets = packets.filter(packet => {
+    const currentPhaseObj = packet.phases && packet.phases[packet.currentPhase];
+    return (
+      currentPhaseObj &&
+      currentPhaseObj.assignee !== user.userId &&
+      currentPhaseObj.phase.toLowerCase() !== "complete"
+    );
+  });
+  
+  const completedPackets = packets.filter(packet => {
+    const currentPhaseObj = packet.phases && packet.phases[packet.currentPhase];
+    return currentPhaseObj && currentPhaseObj.phase.toLowerCase() === "complete";
+  });
 
   return (
     <>

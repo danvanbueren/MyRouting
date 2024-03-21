@@ -59,7 +59,7 @@ function Admin() {
     );
     const recentlyCompleted = packets.filter(
       (packet) =>
-        packet.phases[packet.currentPhase].phase.toLowerCase() === "completed"
+        packet.phases[packet.currentPhase].phase.toLowerCase() === "complete"
     );
 
     setAwaitingReview(awaitingReview);

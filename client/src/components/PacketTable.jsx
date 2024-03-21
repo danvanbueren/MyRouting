@@ -54,7 +54,7 @@ function PacketTable({ packets, sectionName, user }) {
                   packet?.phases[packet?.currentPhase]?.assigneeUser
                     .firstName &&
                   packet?.phases[packet?.currentPhase]?.assigneeUser.lastName
-                    ? packet.phases[packet.currentPhase].phase === "Completed"
+                    ? packet.phases[packet.currentPhase].phase.toLowerCase() === "complete"
                       ? `Completed by ${
                           packet.phases[packet.currentPhase].assigneeUser.rank
                         } ${
