@@ -3,7 +3,7 @@ import { Suspense, useEffect, useState } from "react";
 import MemberSelector from "../../components/MemberSelector";
 import axios from "axios";
 import { getUser } from "../../utils/user";
-const SignForm = ({ user, packet }) => {
+const SignForm = ({ user, packet, closeModal }) => {
   const [comments, setComments] = useState("");
   const [signature, setSignature] = useState("");
   const [selectedMember, setSelectedMember] = useState(null);
@@ -32,6 +32,17 @@ const SignForm = ({ user, packet }) => {
     }
   }, [nextPhase]);
 
+  const resetForm = () => {
+    setComments("");
+    setSignature("");
+    setSelectedMember(null);
+    setShowSearchMemberModal(false);
+    setSelectedRecipient(null);
+    setNextPhase(null);
+    setCompleted(false);
+    setNewSuspense(null);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -51,17 +62,20 @@ const SignForm = ({ user, packet }) => {
 
     // Send updated packet to endpoint
     try {
-      const response = axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_API}/api/users/${user.userId}/packets/${
           packet.packetId
         }/phases/`,
         newPhase
       );
       console.log(packet);
+      resetForm(); // Reset form after successful submission
+      closeModal();
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
   const generateFakeSignature = (user) => {
     console.log(user);
     const { firstName, middleInitial, lastName, dodId } = user;
@@ -125,13 +139,7 @@ const SignForm = ({ user, packet }) => {
                     checked={nextPhase === "Concur"}
                     onChange={(e) => setNextPhase(e.target.value)}
                   />
-                  <Form.Check
-                    type="radio"
-                    label="Denied"
-                    value="Denied"
-                    checked={nextPhase === "Denied"}
-                    onChange={(e) => setNextPhase(e.target.value)}
-                  />
+
                   <Form.Check
                     type="radio"
                     label="Complete"
