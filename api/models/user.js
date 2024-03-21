@@ -54,6 +54,20 @@ export default class user extends Model {
     email: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    middleInitial: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      field: "middle_initial"
+    },
+    dodId: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      field: "dod_id"
+    },
+    searchable: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     }
   }, {
     sequelize,

@@ -25,6 +25,7 @@ export const getUsers = async (req, res) => {
         if (email) {
              whereClause.email = { [Op.iLike]: `%${email}%` };
        }
+       whereClause.searchable = true;
         
       
         const users = await models.user.findAll({

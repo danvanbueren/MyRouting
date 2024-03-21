@@ -7,6 +7,7 @@ import SearchMemberModal from "../components/SearchMemberModal";
 import RoutingModal from "../components/RoutingModal";
 import PacketTable from "../components/PacketTable";
 import ToastMessage from "../components/ToastMessage";
+import {useUser} from '../context/UserContext';
 function Admin() {
   const [user, setUser] = useState({ firstName: "", lastName: "", rank: "" });
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -24,6 +25,9 @@ function Admin() {
     color: "primary",
   });
 
+  const { selectedUser } = useUser();
+
+
   // Function to be passed to the modal
   const handleSelectMember = (member) => {
     setSelectedMember(member);
@@ -31,7 +35,7 @@ function Admin() {
     setIsRoutingModalOpen(true);
   };
 
-  const filterPackets = (packets) => {
+ const filterPackets = (packets) => {
     const awaitingReview = packets.filter(
       (packet) =>
         (packet.phases[packet.currentPhase].phase.toLowerCase() === "review" ||
@@ -42,15 +46,15 @@ function Admin() {
     );
     const awaitingSignature = packets.filter(
       (packet) =>
-        packet.phases[packet.currentPhase].phase.toLowerCase() ===
+        packet.phases && packet.phases[packet.currentPhase]?.phase.toLowerCase() ===
           "signature" &&
-        packet.phases[packet.currentPhase].assignee !==
+        packet.phases && packet.phases[packet.currentPhase]?.assignee !==
           "1c40ad46-e5f7-11ee-b57a-e39ea2c18650"
     );
     const submittedAFPC = packets.filter(
       (packet) =>
-        packet.phases[packet.currentPhase].phase.toLowerCase() === "afpc" ||
-        packet.phases[packet.currentPhase].assignee ===
+        packet.phases && packet.phases[packet.currentPhase]?.phase.toLowerCase() === "afpc" ||
+        packet.phases && packet.phases[packet.currentPhase]?.assignee ===
           "1c40ad46-e5f7-11ee-b57a-e39ea2c18650"
     );
     const recentlyCompleted = packets.filter(
@@ -64,38 +68,35 @@ function Admin() {
     setRecentlyCompleted(recentlyCompleted);
   };
 
+   
   useEffect(() => {
     document.title = "Demo myRouting Admin";
 
-    const getUser = async () => {
+  const getUser = async () => {
+    if (selectedUser) {
       try {
-        const response = await axios.get(
-          `${
-            import.meta.env.VITE_API
-          }/api/users/1de77550-d6f0-11ee-abc6-5c60baeb08ab`
-        );
+        const response = await axios.get(`${import.meta.env.VITE_API}/api/users/${selectedUser}`);
         setUser(response.data);
       } catch (error) {
         console.error("Get user failed:", error);
-        setError("Failed to get user data.");
       }
-    };
+    }
+  };
 
-    getUser();
-
-    const getPackets = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API}/api/packets`
-        );
-        filterPackets(response.data);
-      } catch (error) {
-        console.error("Get packets failed:", error);
-        setError("Failed to get packets data.");
-      }
-    };
-    getPackets();
-  }, []);
+  const getPackets = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API}/api/packets`
+      );
+      filterPackets(response.data);
+    } catch (error) {
+      console.error("Get packets failed:", error);
+      setError("Failed to get packets data.");
+    }
+  };
+  getUser();
+  getPackets();
+},  [selectedUser]);
 
   return (
     <>
