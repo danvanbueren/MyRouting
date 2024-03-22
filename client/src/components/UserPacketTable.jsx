@@ -52,14 +52,16 @@ const UserPacketTable = ({
         <tbody>
           {packets.map((packet) => (
             <tr key={packet.packetId}>
-              <td>{user.rank}</td>
-              <td>{user.firstName}</td>
-              <td>{user.lastName}</td>
-              <td>{user.email}</td>
+              <td>{user?.rank}</td>
+              <td>{user?.firstName}</td>
+              <td>{user?.lastName}</td>
+              <td>{user?.email}</td>
               <td style={{ display: "flex", justifyContent: "space-evenly" }}>
                 <Button
                   variant="secondary"
                   onClick={() => {
+                    console.log("This is selected")
+                    console.log(packet)
                     setSelectedPacket(packet);
                     setIsModalOpen(true);
                   }}

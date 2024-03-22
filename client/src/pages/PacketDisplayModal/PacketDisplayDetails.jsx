@@ -39,11 +39,11 @@ const Details = ({ packet, creator, assignee }) => {
                   <Card.Text>Step Number: {phase.stepNumber}</Card.Text>
                   <Card.Text>
                     Assignee:{" "}
-                    {phase.assigneeUser.rank +
+                    {phase?.assigneeUser?.rank +
                       " " +
-                      phase.assigneeUser.firstName +
+                      phase?.assigneeUser?.firstName +
                       " " +
-                      phase.assigneeUser.lastName || "N/A"}
+                      phase?.assigneeUser?.lastName || "N/A"}
                   </Card.Text>
                   <Card.Text>
                     Comments: {phase.comments || "No comments"}

@@ -18,11 +18,11 @@ const Status = ({ packet }) => (
               </Card.Text>
               <Card.Text>
                 <strong>Assignee:</strong>{" "}
-                {phase.assigneeUser.rank +
+                {phase?.assigneeUser?.rank +
                   " " +
-                  phase.assigneeUser.firstName +
+                  phase?.assigneeUser?.firstName +
                   " " +
-                  phase.assigneeUser.lastName || "N/A"}
+                  phase?.assigneeUser?.lastName || "N/A"}
               </Card.Text>
               <Card.Text>
                 <strong>Comments:</strong> {phase.comments || "No comments"}
