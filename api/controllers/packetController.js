@@ -457,6 +457,7 @@ export const getUserPackets = async (req, res) => {
         {
           model: models.packetPhase,
           as: "phases",
+          include: [{ model: models.user, as: "assigneeUser" }],
           order: [[models.packetPhase, "packetPhaseId", "ASC"]], // Order phases by packetPhaseId in ascending order
         },
       ],
