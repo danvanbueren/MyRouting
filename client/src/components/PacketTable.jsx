@@ -30,6 +30,8 @@ function PacketTable({ packets, sectionName, user }) {
 
   return (
     <>
+        <div className="table-responsive"> 
+
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -100,6 +102,7 @@ function PacketTable({ packets, sectionName, user }) {
           ))}
         </tbody>
       </Table>
+      </div>
 
       <PacketDisplayModal
         isOpen={isModalOpen}

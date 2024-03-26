@@ -39,6 +39,8 @@ const UserPacketTable = ({
 
   return (
     <>
+    <div className="table-responsive"> 
+
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -93,6 +95,7 @@ const UserPacketTable = ({
           ))}
         </tbody>
       </Table>
+      </div>
 
       <RoutingModal
         isOpen={isEditModalOpen}
