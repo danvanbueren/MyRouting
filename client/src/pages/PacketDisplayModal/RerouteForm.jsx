@@ -1,22 +1,81 @@
 import { ListGroup, Card, Form, Button } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import MemberSelector from "../../components/MemberSelector";
+import axios from "axios";
 
-const RerouteForm = () => {
+const RerouteForm = ({ user, packet, closeModal }) => {
   const [comments, setComments] = useState("");
-  const [reassignTo, setReassignTo] = useState("");
+  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [showSearchMemberModal, setShowSearchMemberModal] = useState(false);
+  const [nextPhase, setNextPhase] = useState(null);
+  const [newSuspense, setNewSuspense] = useState(null);
 
-  const handleSubmit = (event) => {
+  const onSelectMember = (member) => {
+    setSelectedMember(member);
+    setShowSearchMemberModal(false);
+    setSelectedRecipient({
+      assignee: member.userId,
+      assigneeRole: "MEMBER",
+    });
+  };
+
+  useEffect(() => {
+    if (nextPhase === "Complete") {
+      setSelectedRecipient({
+        assignee: packet.creator,
+        assigneeRole: "CREATOR",
+      });
+      setCompleted(true);
+    }
+  }, [nextPhase]);
+
+  const resetForm = () => {
+    setComments("");
+    setSelectedRecipient(null);
+    setSelectedMember(null);
+    setShowSearchMemberModal(false);
+    setNextPhase(null);
+    setNewSuspense(null);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission here
-    console.log("Comments: ", comments);
-    console.log("Reassigned to: ", reassignTo);
+
+    // Create new phase
+    const newPhase = [
+      {
+        comments,
+        assignee: selectedRecipient?.assignee,
+        assigneeRole: selectedRecipient?.assigneeRole,
+        completed: false,
+        stepNumber: packet.phases.length,
+        phase: nextPhase,
+        suspense: newSuspense,
+      },
+    ];
+
+    // Send updated packet to endpoint
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API}/api/users/${user.userId}/packets/${
+          packet.packetId
+        }/phases/`,
+        newPhase
+      );
+      console.log(packet);
+      resetForm(); // Reset form after successful submission
+      closeModal();
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <ListGroup variant="flush">
         <ListGroup.Item>
-          <h3>Packet Reassignment</h3>
+          <h3>Packet Reroute</h3>
           <Card>
             <Card.Body>
               <Form.Group controlId="comments" className="mt-2 mb-4">
@@ -30,20 +89,60 @@ const RerouteForm = () => {
                   onChange={(e) => setComments(e.target.value)}
                 />
               </Form.Group>
-              <Form.Group controlId="reassignTo" className="mb-4">
+              <Form.Group controlId="newPhase" className="mb-4">
                 <Form.Label className="h5 font-weight-bold">
-                  Reassign To
+                  Next Phase
+                </Form.Label>
+                <Form.Group className="d-flex flex-direction-row justify-content-evenly mt-4">
+                  <Form.Check
+                    type="radio"
+                    label="Signature"
+                    value="Signature"
+                    checked={nextPhase === "Signature"}
+                    onChange={(e) => setNextPhase(e.target.value)}
+                  />
+                  <Form.Check
+                    type="radio"
+                    label="Review"
+                    value="Review"
+                    checked={nextPhase === "Review"}
+                    onChange={(e) => setNextPhase(e.target.value)}
+                  />
+                  <Form.Check
+                    type="radio"
+                    label="Concur"
+                    value="Concur"
+                    checked={nextPhase === "Concur"}
+                    onChange={(e) => setNextPhase(e.target.value)}
+                  />
+
+                  <Form.Check
+                    type="radio"
+                    label="Complete"
+                    value="Complete"
+                    checked={nextPhase === "Complete"}
+                    onChange={(e) => setNextPhase(e.target.value)}
+                  />
+                </Form.Group>
+              </Form.Group>
+              <Form.Group controlId="Suspense" className="mb-4">
+                <Form.Label className="h5 font-weight-bold">
+                  Suspense
                 </Form.Label>
                 <Form.Control
-                  as="select"
-                  value={reassignTo}
-                  onChange={(e) => setReassignTo(e.target.value)}
-                >
-                  {/* Add options for users to reassign to here */}
-                  <option value="">Select user...</option>
-                </Form.Control>
+                  type="date"
+                  value={newSuspense}
+                  onChange={(e) => setNewSuspense(e.target.value)}
+                  disabled={nextPhase === "Complete"}
+                />
               </Form.Group>
             </Card.Body>
+            {nextPhase !== "Complete" && (
+              <MemberSelector
+                onSelectMember={onSelectMember}
+                selectedMember={selectedMember}
+              />
+            )}
           </Card>
         </ListGroup.Item>
       </ListGroup>

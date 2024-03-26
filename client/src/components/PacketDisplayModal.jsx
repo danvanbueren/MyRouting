@@ -14,6 +14,7 @@ import PacketDisplayDetails from "../pages/PacketDisplayModal/PacketDisplayDetai
 import SignForm from "../pages/PacketDisplayModal/SignForm";
 import ReviewForm from "../pages/PacketDisplayModal/ReviewForm";
 import RerouteForm from "../pages/PacketDisplayModal/RerouteForm";
+import ConcurForm from "../pages/PacketDisplayModal/ConcurForm";
 
 const PacketDisplayModal = ({ isOpen, closeModal, packet, user }) => {
   const [creator, setCreator] = useState(null);
@@ -74,8 +75,15 @@ const PacketDisplayModal = ({ isOpen, closeModal, packet, user }) => {
             <Tab.Pane eventKey="details">
               <PacketDisplayDetails packet={packet} creator={creator} />
             </Tab.Pane>
-            {action === "Sign" && <SignForm user={user} packet={packet} />}
-            {action === "Review" && <ReviewForm user={user} packet={packet} />}
+            {action === "Sign" && (
+              <SignForm user={user} packet={packet} closeModal={closeModal} />
+            )}
+            {action === "Review" && (
+              <ReviewForm user={user} packet={packet} closeModal={closeModal} />
+            )}
+            {action === "Concur" && (
+              <ConcurForm user={user} packet={packet} closeModal={closeModal} />
+            )}
             {action === "Reroute" && (
               <RerouteForm user={user} packet={packet} />
             )}
